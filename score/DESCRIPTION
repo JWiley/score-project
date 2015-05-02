@@ -1,0 +1,19 @@
+Package: score
+Title: Standardizing Physiological Composite Risk Endpoints
+Version: 0.1-0
+Date: 2015-05-01
+Authors@R: c(person("Joshua", "Wiley", role = c("aut", "cre"),
+    email = "jwiley.psych@gmail.com"))
+Author: Joshua F. Wiley <jwiley.psych@gmail.com>
+Maintainer: Joshua F. Wiley <jwiley.psych@gmail.com>
+Description: .
+Depends:
+    R (>= 3.1.0)
+Imports:
+    ggplot2,
+    reshape2,
+    lavaan
+License: LGPL-3
+ByteCompile: true
+URL: https://jwiley.github.io/score-project/
+LazyData: true
