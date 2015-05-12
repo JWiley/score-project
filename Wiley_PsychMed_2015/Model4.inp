@@ -1,0 +1,62 @@
+TITLE:
+ BiFactor Model of biomarkers;
+DATA:
+FILE = "factor_allcov_clustering_BiFac.dat";
+ 
+VARIABLE:
+NAMES = Radj_epi Radj_nor avgb_sd avgb_rm avgb_lf avgb_hf Rb4p1d Radj_crt b4bdheas
+     Rb4bcrp b4bil6 b4bfgn b4bsicam b4bsesel pulpress Rb4p1gs b4bha1c Rb4bgluc
+     p4homair b4bldl b4bhdl Rb4btrig Rb4pwhr m2famnum m2id b1pgender b1page_m2
+     Agecat MedGroup white p4majorconditions p4minorconditions p4sumburden b3tem
+     exec_fxn compression bending impact reg_izallo GNNregAL RXNNregAL; 
+ MISSING=.;
+ 
+  usevariables = Radj_epi Radj_nor avgb_sd avgb_rm avgb_lf
+    avgb_hf Radj_crt b4bdheas Rb4bcrp
+    b4bil6 b4bfgn b4bsicam b4bsesel pulpress Rb4p1gs Rb4p1d
+    b4bha1c Rb4bgluc
+    p4homair b4bldl b4bhdl Rb4btrig Rb4pwhr
+    b1pgender b1page_m2;
+    CLUSTER = m2famnum;
+    idvariable = m2id;
+
+ANALYSIS:
+
+    TYPE = COMPLEX;
+    ESTIMATOR = MLR;
+    PROCESSORS = 4;
+MODEL:
+
+    Radj_epi Radj_nor ON b1pgender b1page_m2;
+    avgb_sd avgb_rm avgb_hf avgb_lf ON b1pgender b1page_m2;
+    Rb4p1d ON b1pgender b1page_m2;
+    Radj_crt b4bdheas ON b1pgender b1page_m2;
+    Rb4bcrp b4bil6 b4bfgn b4bsicam b4bsesel ON b1pgender b1page_m2;
+    Rb4p1gs pulpress ON b1pgender b1page_m2;
+    Rb4bgluc p4homair b4bha1c ON b1pgender b1page_m2;
+    Rb4pwhr Rb4btrig b4bhdl b4bldl ON b1pgender b1page_m2;
+  
+ 
+    sym BY Radj_nor@1 Radj_epi@1;
+    hpa BY Radj_crt@1 b4bdheas@1;
+    card BY Rb4p1gs@1 pulpress@1;
+    gluc BY Rb4bgluc@1 p4homair*1 b4bha1c*1;
+    lipid BY Rb4pwhr@1 Rb4btrig*.65 b4bhdl*-1 b4bldl*1 p4homair*1;
+    infl BY Rb4bcrp@1 b4bil6*1 b4bfgn*.9 b4bsicam*.25 b4bsesel*.5;
+    para BY avgb_sd@-1 avgb_rm*-1 avgb_hf*-1 avgb_lf*-1 Rb4p1d*1;
+    avgb_sd@0;
+    avgb_rm WITH avgb_hf*;
+ 
+    AL BY Radj_epi*1 Radj_nor*1 avgb_sd*-1 avgb_rm*-1 avgb_lf*-1
+    avgb_hf*-1 Radj_crt*1 b4bdheas*1 Rb4bcrp*1
+    b4bil6*1 b4bfgn*1 b4bsicam*1 b4bsesel*1 pulpress*1 Rb4p1gs*1 Rb4p1d*1
+    b4bha1c*1 Rb4bgluc*1
+    p4homair*1 b4bldl*-1 b4bhdl*1 Rb4btrig*1 Rb4pwhr*1;
+    AL@1;
+    AL WITH sym@0 para@0 hpa@0 infl@0
+    card@0 gluc@0 lipid@0;
+    Rb4bgluc@0;
+OUTPUT:
+
+    STDYX;
+    CINTERVAL;
