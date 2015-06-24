@@ -1,82 +1,3 @@
-#' Density Plot for a Long Dataset
-#'
-#' Internal function only, not meant for general use
-#' Simple wrapper around ggplot2 functionaly to create
-#' density plots, potentially for many variables and coloured by group.
-#'
-#' @param data A dataset (or melt()ed dataset)
-#' @param melt Logical whether to melt() dataset
-#' @param x name of variable for density
-#' @param facet A variable to use for facetting
-#' @param g A variable to use for grouping/colouring.  If \code{melt=TRUE}, this is
-#'   used as id.var as well.
-#' @param hist Logical whether to make a density plot or histogram (if TRUE).
-#' @return A ggplot2 graph.
-#' @import ggplot2 reshape2
-#' @examples
-#' # simple facetted plot
-#' ldensity(mtcars, TRUE)
-#' # simple coloured plot
-#' ldensity(mtcars, x = "mpg", g = "factor(cyl)")
-ldensity <- function(data, melt = FALSE, x, facet, g, hist=FALSE) {
-    data <- as.data.frame(data)
-    if (melt) {
-        if (!missing(g)) {
-            data <- melt(data, id.var = g)
-        } else {
-            data <- melt(data)
-        }
-        x <- "value"
-        facet <- ~variable
-    }
-
-    if (!missing(g)) {
-        p <- ggplot(data, aes_string(x = x, color = g))
-    } else {
-        p <- ggplot(data, aes_string(x = x))
-    }
-
-    if (hist) {
-        p <- p + geom_histogram()
-    } else {
-        p <- p + geom_density()
-    }
-
-    if (!missing(facet)) {
-        p <- p + facet_wrap(facet, scales = "free")
-    }
-    p + theme_bw()
-}
-
-#' Winsorize at specified percentiles
-#'
-#' Simple function winsorizes data at the specified percentile.
-#'
-#' @param d A vector, matrix, or data frame to be winsorized
-#' @param percentile The percentile bounded by [0, 1] to winsorize data at
-#' @param na.rm A logical whether to remove NAs.
-#' @return winsorized data.
-#' @export
-#' @examples
-#' #make me!
-winsorizor <- function(d, percentile, na.rm = TRUE) {
-    stopifnot(percentile >= 0 && percentile <= 1)
-
-    f <- function(x, percentile, na.rm) {
-          low <- quantile(x, probs = 0 + percentile, na.rm = na.rm)
-          high <- quantile(x, probs = 1 - percentile, na.rm = na.rm)
-          pmin(pmax(x, low), high)
-    }
-
-    if (is.vector(d)) {
-        d <- f(d, percentile = percentile, na.rm = na.rm)
-    } else if (is.matrix(d) || is.data.frame(d)) {
-        d <- as.data.frame(apply(d, 2, f, percentile = percentile, na.rm = na.rm))
-    }
-    return(d)
-}
-
-
 #' Calculate distance scores on data in preparation for composite scoring
 #'
 #' @param d The data
@@ -90,13 +11,38 @@ winsorizor <- function(d, percentile, na.rm = TRUE) {
 #' @param winsorize Whether to winsorize the data or not.  Defaults to \code{FALSE}.
 #'   If not \code{FALSE}, the percentile to winsorize at.  For example, .01 would be
 #'   the .01 and the 1 - .01 percentiles.
-#' @param better Logical indicating whether \dQuote{better} values than the threshold are allowed.
-#' @param na.rm A logical whether missing values should be ommitted
-#' @param saveall A logical whether to save all intermediary datasets and graphs. Defaults to \code{FALSE}.
+#' @param better Logical indicating whether \dQuote{better} values than the threshold
+#'   are allowed. Defaults to \code{TRUE}.
+#' @param na.rm A logical whether missing values should be ommitted. Defaults to
+#'   \code{TRUE}.
+#' @param saveall A logical whether to save all intermediary datasets and graphs.
+#'   Defaults to \code{FALSE}.
 #' @return A list of results.
 #' @export
+#' @family composite
 #' @examples
-#' # make me!
+#' # this example creates distances for the built in mtcars data
+#' # see ?mtcars for more details
+#' # The distances are calculated from the "best" in the dataset
+#' # defined by these thresholds
+#' thresholds <- with(mtcars, c(
+#'   mpg = max(mpg),
+#'   hp = max(hp),
+#'   wt = min(wt),
+#'   qsec = min(qsec)))
+#'
+#' # higher mpg and hp are better,
+#' # whereas lower wt and qsec are better
+#' dres <- distanceScores(mtcars[, c("mpg", "hp", "wt", "qsec")],
+#'   thresholds = list(thresholds),
+#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
+#'   saveall = TRUE)
+#'
+#' # see a density plot of the distance scores
+#' dres$Density
+#'
+#' # cleanup
+#' rm(thresholds, dres)
 distanceScores <- function(d, g, thresholds, higherisbetter, winsorize = FALSE, better = TRUE, na.rm = TRUE, saveall = FALSE) {
   fcall <- match.call()
 
@@ -203,11 +149,43 @@ distanceScores <- function(d, g, thresholds, higherisbetter, winsorize = FALSE, 
 #' @param covmat The covariance matrix to use.  If missing,
 #'   austomatically calculated from the data.
 #' @param standardize A logical value whether to standardize the data or not.
+#'   Defaults to \code{TRUE}.
 #' @return A list of results.
 #' @export
+#' @family composite
 #' @examples
-#' # make me!
+#' # this example creates distances for the built in mtcars data
+#' # see ?mtcars for more details
+#' # The distances are calculated from the "best" in the dataset
+#' # defined by these thresholds
+#' thresholds <- with(mtcars, c(
+#'   mpg = max(mpg),
+#'   hp = max(hp),
+#'   wt = min(wt),
+#'   qsec = min(qsec)))
+#'
+#' # higher mpg and hp are better,
+#' # whereas lower wt and qsec are better
+#' dres <- distanceScores(mtcars[, c("mpg", "hp", "wt", "qsec")],
+#'   thresholds = list(thresholds),
+#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
+#'   saveall = TRUE)
+#'
+#' # see a density plot of the distance scores
+#' dres$Density
+#'
+#' # now prepare to create the composite
+#' # covariance matrix will be calculated from the data
+#' # and data will be standardized to unit variance by default
+#' cprep <- prepareComposite(dres)
+#' # cleanup
+#' rm(thresholds, dres, cprep)
 prepareComposite <- function(object, covmat, standardize = TRUE) {
+    if (!inherits(object, "distancescores")) {
+        warning(paste("Object is not of type 'distancescores'.",
+                      "prepareComposite() may not work correctly."))
+    }
+
     k <- ncol(object$Distances)
     if (missing(covmat)) {
         covmat <- cov(object$Distances)
@@ -238,16 +216,80 @@ prepareComposite <- function(object, covmat, standardize = TRUE) {
 
 #' Score Data Using the Mahalanobis Distance
 #'
-#' Create Metabolic Syndrome Severity Score using the Mahalanobis Distance
+#' Create a composite using the Mahalanobis Distance
 #'
-#' @param object An object ready for use
+#' @param object An object of class \code{compositedata} ready for use
 #' @param ncomponents the number of components to use from the
-#'   principal component analysis
+#'   principal component analysis. If missing, defaults to the
+#'   number of columns in the data.
 #' @return A list of results.
 #' @export
+#' @family composite
 #' @examples
-#' # make me!
+#' # this example creates distances for the built in mtcars data
+#' # see ?mtcars for more details
+#' # The distances are calculated from the "best" in the dataset
+#' # defined by these thresholds
+#' thresholds <- with(mtcars, c(
+#'   mpg = max(mpg),
+#'   hp = max(hp),
+#'   wt = min(wt),
+#'   qsec = min(qsec)))
+#'
+#' # higher mpg and hp are better,
+#' # whereas lower wt and qsec are better
+#' dres <- distanceScores(mtcars[, c("mpg", "hp", "wt", "qsec")],
+#'   thresholds = list(thresholds),
+#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
+#'   saveall = TRUE)
+#'
+#' # see a density plot of the distance scores
+#' dres$Density
+#'
+#' # now prepare to create the composite
+#' # covariance matrix will be calculated from the data
+#' # and data will be standardized to unit variance by default
+#' cprep <- prepareComposite(dres)
+#'
+#' # now we can create the composite based on mahalanobis distances
+#' # from our defined thresholds
+#' mcomp <- mahalanobisComposite(cprep)
+#'
+#' # view a histogram of the composite scores
+#' mcomp$ScoreHistogram
+#'
+#' # summarize the composite scores
+#' summary(mcomp$Scores)
+#'
+#' # check the screeplot and loadings
+#' mcomp$Screeplot
+#' mcomp$LoadingGraph
+#' # examine the loadings as a table
+#' mcomp$LoadingTable
+#'
+#' # one component is adequate to explain these data
+#' # to be safe can pick first two and re-run model
+#'
+#' # use only first two components
+#' mcomp2 <- mahalanobisComposite(cprep, ncomponents = 2)
+#'
+#' # view a histogram of the updated composite scores
+#' mcomp2$ScoreHistogram
+#'
+#' # summarize the composite scores
+#' summary(mcomp2$Scores)
+#'
+#' # compare using all versus two components
+#' plot(mcomp$Scores, mcomp2$Scores)
+#'
+#' # cleanup
+#' rm(thresholds, dres, cprep, mcomp, mcomp2)
 mahalanobisComposite <- function(object, ncomponents) {
+  if (!inherits(object, "compositedata")) {
+      warning(paste("Object is not of type 'compositedata'.",
+                    "mahalanobisComposite() may not work correctly."))
+  }
+
   if (missing(ncomponents)) {
     ncomponents <- object$k
   }
@@ -305,20 +347,64 @@ mahalanobisComposite <- function(object, ncomponents) {
 
 #' Score Data Using a simple sum
 #'
-#' Create Metabolic Syndrome Severity Score using summation
+#' Create a composite using summation
 #'
 #' @param object An object ready for use
-#' @param transformation A character string indicating the type of transformation to use.
+#' @param transform A character string indicating the type of transformation to use.
 #'   One of \dQuote{square}, \dQuote{abs}, or \dQuote{none}, which either sums the raw data,
 #'   sums the squared data and then takes the square root, or sums the absolute values of the
 #'   data.
 #' @return A list of results.
 #' @export
+#' @family composite
 #' @examples
-#' # make me!
-scoreComposite <- function(object, transform = c("square", "abs", "none")) {
+#' # this example creates distances for the built in mtcars data
+#' # see ?mtcars for more details
+#' # The distances are calculated from the "best" in the dataset
+#' # defined by these thresholds
+#' thresholds <- with(mtcars, c(
+#'   mpg = max(mpg),
+#'   hp = max(hp),
+#'   wt = min(wt),
+#'   qsec = min(qsec)))
+#'
+#' # higher mpg and hp are better,
+#' # whereas lower wt and qsec are better
+#' dres <- distanceScores(mtcars[, c("mpg", "hp", "wt", "qsec")],
+#'   thresholds = list(thresholds),
+#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
+#'   saveall = TRUE)
+#'
+#' # see a density plot of the distance scores
+#' dres$Density
+#'
+#' # now prepare to create the composite
+#' # covariance matrix will be calculated from the data
+#' # and data will be standardized to unit variance by default
+#' cprep <- prepareComposite(dres)
+#'
+#' # now we can create the composite based on summing the (standardized)
+#' # distances from our defined thresholds
+#' # by default, distances are squared, then summed, and then square rooted
+#' # to be back on the original scale
+#' scomp <- sumComposite(cprep)
+#'
+#' # view a histogram of the composite scores
+#' scomp$ScoreHistogram
+#'
+#' # summarize the composite scores
+#' summary(scomp$Scores)
+#'
+#' # cleanup
+#' rm(thresholds, dres, cprep, scomp)
+sumComposite <- function(object, transform = c("square", "abs", "none")) {
 ## TODO: extend to allow for averaging within systems
 ## first before averaging across systems
+  if (!inherits(object, "compositedata")) {
+      warning(paste("Object is not of type 'compositedata'.",
+                    "sumComposite() may not work correctly."))
+  }
+
   transform <- match.arg(transform)
 
   finalScores <- switch(transform,
@@ -330,7 +416,7 @@ scoreComposite <- function(object, transform = c("square", "abs", "none")) {
       Scores = finalScores,
       ScoreHistogram = ldensity(data.frame(Scores = finalScores), x = "Scores", hist = TRUE),
       transform = transform), object)
-  class(out) <- c("scorecomposite", "list")
+  class(out) <- c("sumcomposite", "list")
 
   return(out)
 }
@@ -338,7 +424,7 @@ scoreComposite <- function(object, transform = c("square", "abs", "none")) {
 
 #' Score Data Using a Factor Model
 #'
-#' Create Metabolic Syndrome Severity Score using a Factor Model
+#' Create a composite using a Factor Model
 #'
 #' @param object An object ready for use
 #' @param type A character string indicating the type of factor model to use
@@ -347,15 +433,58 @@ scoreComposite <- function(object, transform = c("square", "abs", "none")) {
 #' @return A list of results.
 #' @import lavaan
 #' @export
+#' @family composite
 #' @examples
-#' # make me!
-scoreFactor <- function(object, type = c("onefactor", "secondorderfactor", "bifactor"), factors = "") {
+#' # this example creates distances for the built in mtcars data
+#' # see ?mtcars for more details
+#' # The distances are calculated from the "best" in the dataset
+#' # defined by these thresholds
+#' thresholds <- with(mtcars, c(
+#'   mpg = max(mpg),
+#'   hp = max(hp),
+#'   wt = min(wt),
+#'   qsec = min(qsec)))
+#'
+#' # higher mpg and hp are better,
+#' # whereas lower wt and qsec are better
+#' dres <- distanceScores(mtcars[, c("mpg", "hp", "wt", "qsec")],
+#'   thresholds = list(thresholds),
+#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
+#'   saveall = TRUE)
+#'
+#' # see a density plot of the distance scores
+#' dres$Density
+#'
+#' # now prepare to create the composite
+#' # covariance matrix will be calculated from the data
+#' # and data will be standardized to unit variance by default
+#' cprep <- prepareComposite(dres)
+#'
+#' # now we can create the composite based on summing the (standardized)
+#' # distances from our defined thresholds
+#' # by default, distances are squared, then summed, and then square rooted
+#' # to be back on the original scale
+#' fcomp <- factorComposite(cprep, type = "onefactor")
+#'
+#' # view a histogram of the composite scores
+#' fcomp$ScoreHistogram
+#'
+#' # summarize the composite scores
+#' summary(fcomp$Scores$Comp)
+#'
+#' # cleanup
+#' rm(thresholds, dres, cprep, fcomp)
+factorComposite <- function(object, type = c("onefactor", "secondorderfactor", "bifactor"), factors = "") {
     type <- match.arg(type)
+    if (!inherits(object, "compositedata")) {
+        warning(paste("Object is not of type 'compositedata'.",
+                      "factorComposite() may not work correctly."))
+    }
 
     vars <- colnames(object$data)
     unused <- setdiff(vars, unlist(factors))
 
-    onefactor <- paste0("MSSS =~ ", paste(vars, collapse = " + "))
+    onefactor <- paste0("Comp =~ ", paste(vars, collapse = " + "))
 
     m.factors <- paste(sapply(1:length(factors), function(i) {
         sprintf("%s =~ %s", names(factors)[i],
@@ -374,14 +503,14 @@ scoreFactor <- function(object, type = c("onefactor", "secondorderfactor", "bifa
         m.factors.covariances <- ""
     }
 
-    m.overall <- paste0("MSSS =~ ", paste(c(names(factors), unused), collapse = " + "))
+    m.overall <- paste0("Comp =~ ", paste(c(names(factors), unused), collapse = " + "))
 
     secondorderfactor <- paste(m.factors, m.overall, sep = "\n")
 
     bifactor <- paste(
         m.factors,
         onefactor,
-        paste(paste("MSSS ~~ 0 * ", names(factors)), collapse = "\n"),
+        paste(paste("Comp ~~ 0 * ", names(factors)), collapse = "\n"),
         paste(unlist(m.factors.covariances), collapse = "\n"),
         sep = "\n")
 
@@ -390,23 +519,12 @@ scoreFactor <- function(object, type = c("onefactor", "secondorderfactor", "bifa
                   secondorderfactor = sem(secondorderfactor, data = object$data),
                   bifactor = sem(bifactor, data = object$data))
 
-    list(
-        Fit = fit,
-        Scores = as.data.frame(predict(fit)))
-}
+    out <- c(list(
+      Scores = as.data.frame(predict(fit)),
+      ScoreHistogram = ldensity(as.data.frame(predict(fit)), x = "Comp", hist = TRUE),
+      Fit = fit), object)
 
-#' @name BioDB
-#' @title Biomarker Thresholds Database
-#' @description This data set lists the clinical high risk thresholds for a variety of biomarkers
-#' @docType data
-#' @format a \code{list}.
-#' @source Various publications
-NULL
-## BioDB <- list(
-##     MetabolicSyndrome = data.frame(
-##         Biomarker = c("SBP", "DBP", "Triglycerides", "HDL-C", "WaistCircumference", "BMI", "Glucose", "HbA1c"),
-##         Units = c("mmHg", "mmHg", "mmol/L", "mmol/L", "cm", "kg/m^2", "mmol/L", "percent"),
-##         Female = c(130, 85, 1.7, 1.3, 80, 25, 5.6, 5.7),
-##         Male = c(130, 85, 1.7, 1.0, 94, 25, 5.6, 5.7),
-##         Higherisbetter = c(0, 0, 0, 1, 0, 0, 0, 0)))
-## save(BioDB, file = "../data/BioDB.rda")
+  class(out) <- c("factorcomposite", "list")
+
+  return(out)
+}
