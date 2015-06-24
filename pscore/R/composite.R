@@ -91,7 +91,10 @@ distanceScores <- function(d, g, thresholds, higherisbetter, winsorize = FALSE, 
 
   if (winsorize) {
       d <- winsorizor(d, percentile = winsorize, na.rm = TRUE)
+      winsorized <- attr(d, "winsorized")
       if (saveall) d.winsorize <- d
+  } else {
+      winsorized <- NULL
   }
 
 
@@ -134,7 +137,8 @@ distanceScores <- function(d, g, thresholds, higherisbetter, winsorize = FALSE, 
       Groups = g,
       SavedPlots = plots, SavedData = data,
       thresholds = thresholds, higherisbetter = higherisbetter,
-      winsorize = winsorize, better = better, na.rm = na.rm,
+      winsorize = winsorize, winsorized = winsorized,
+      better = better, na.rm = na.rm,
       call = fcall)
   class(out) <- c("distancescores", "list")
 

@@ -69,15 +69,35 @@ winsorizor <- function(d, percentile, na.rm = TRUE) {
     f <- function(x, percentile, na.rm) {
           low <- quantile(x, probs = 0 + percentile, na.rm = na.rm)
           high <- quantile(x, probs = 1 - percentile, na.rm = na.rm)
-          pmin(pmax(x, low), high)
+
+          out <- pmin(pmax(x, low), high)
+
+          new.attr <- data.frame(low = low, high = high, percentile = percentile)
+          rownames(new.attr) <- NULL
+
+          attributes(out) <- c(attributes(x), winsorized = list(new.attr))
+
+          return(out)
     }
 
     if (is.vector(d)) {
-        d <- f(d, percentile = percentile, na.rm = na.rm)
+        out <- f(d, percentile = percentile, na.rm = na.rm)
     } else if (is.matrix(d) || is.data.frame(d)) {
-        d <- as.data.frame(apply(d, 2, f, percentile = percentile, na.rm = na.rm))
+
+        tmp <- lapply(1:ncol(d), function(i) f(d[, i], percentile = percentile, na.rm = na.rm))
+        all.attr <- do.call(rbind, lapply(tmp, function(x) attr(x, "winsorized")))
+        all.attr$variable <- colnames(d)
+        rownames(all.attr) <- NULL
+
+        if (is.matrix(d)) {
+            out <- as.matrix(as.data.frame(tmp))
+        } else {
+            out <- as.data.frame(tmp)
+        }
+        attributes(out) <- c(attributes(d), winsorized = list(all.attr))
     }
-    return(d)
+
+    return(out)
 }
 
 
