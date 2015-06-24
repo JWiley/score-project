@@ -387,35 +387,78 @@ mahalanobisComposite <- function(object, ncomponents) {
 #' # distances from our defined thresholds
 #' # by default, distances are squared, then summed, and then square rooted
 #' # to be back on the original scale
-#' scomp <- sumComposite(cprep)
+#' scomp <- sumComposite(cprep, "square", "sum")
 #'
-#' # view a histogram of the composite scores
+#' # view a histogram and summary of the composite scores
 #' scomp$ScoreHistogram
-#'
-#' # summarize the composite scores
 #' summary(scomp$Scores)
 #'
+#' # calculate average (mean) instead of sum
+#' scomp2 <- sumComposite(cprep, "square", "mean")
+#'
+#' # view a histogram and summary of the composite scores
+#' scomp2$ScoreHistogram
+#' summary(scomp2$Scores)
+#'
+#' # scores are still the same
+#' plot(scomp$Scores, scomp2$Scores)
+#'
+#' # first average scores within a system, then sum
+#' # note that within a system, scores are always averaged,
+#' # never summed.
+#' scomp3 <- sumComposite(cprep, "square", "sum",
+#'   systems = list(
+#'     environment = c("mpg"),
+#'     performance = c("hp", "qsec", "wt")))
+#'
+#' # view a histogram and summary of the composite scores
+#' scomp3$ScoreHistogram
+#' summary(scomp3$Scores)
+#'
+#' # compare all three scores
+#' # because of the different number of indicators within each system
+#' # there is a re-weighting for S3
+#' plot(data.frame(S1 = scomp$Scores, S2 = scomp2$Scores, S3 = scomp3$Scores))
+#'
 #' # cleanup
-#' rm(thresholds, dres, cprep, scomp)
-sumComposite <- function(object, transform = c("square", "abs", "none")) {
-## TODO: extend to allow for averaging within systems
-## first before averaging across systems
+#' rm(thresholds, dres, cprep, scomp, scomp2, scomp3)
+sumComposite <- function(object, transform = c("square", "abs", "none"), type = c("sum", "mean"),
+                         systems) {
   if (!inherits(object, "compositedata")) {
       warning(paste("Object is not of type 'compositedata'.",
                     "sumComposite() may not work correctly."))
   }
 
   transform <- match.arg(transform)
+  aggregator <- switch(type,
+                       sum = rowSums,
+                       mean = rowMeans)
 
-  finalScores <- switch(transform,
-                        square = sqrt(rowSums(object$data^2)),
-                        abs = rowSums(abs(object$data)),
-                        none = rowSums(object$data))
+  if (!missing(systems)) {
+      x <- sapply(systems, function(v) {
+        switch(transform,
+          square = rowMeans(object$data[, v, drop = FALSE]^2),
+          abs = rowMeans(abs(object$data[, v, drop = FALSE])),
+          none = rowMeans(object$data[, v, drop = FALSE]))
+       })
+      finalScores <- switch(transform,
+         square = sqrt(aggregator(x)),
+         abs = aggregator(x),
+         none = aggregator(x))
+  } else {
+      finalScores <- switch(transform,
+        square = sqrt(aggregator(object$data^2)),
+        abs = aggregator(abs(object$data)),
+        none = aggregator(object$data))
+      systems <- NULL
+  }
 
   out <- c(list(
       Scores = finalScores,
       ScoreHistogram = ldensity(data.frame(Scores = finalScores), x = "Scores", hist = TRUE),
-      transform = transform), object)
+      transform = transform,
+      type = type,
+      systems = systems), object)
   class(out) <- c("sumcomposite", "list")
 
   return(out)
