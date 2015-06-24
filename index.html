@@ -62,8 +62,10 @@
 		<li><a href="#software" class="btn">About the Software</a></li>
                 <li class="divider"></li>		
 		<li><a href="https://github.com/JWiley/score-project" class="btn">View on GitHub</a></li>
-		<li><a href="https://github.com/JWiley/score-project/zipball/master" class="btn">Download .zip</a></li>
-		<li><a href="https://github.com/JWiley/score-project/tarball/master" class="btn">Download .tar.gz</a></li>
+		<li><a href="https://github.com/JWiley/score-project/blob/master/pscore_0.1-1.tar.gz?raw=true" class="btn">Download pscore .tar.gz</a></li>		
+		<li><a href="https://github.com/JWiley/score-project/zipball/master" class="btn">Download all .zip</a></li>
+		<li><a href="https://github.com/JWiley/score-project/tarball/master" class="btn">Download all .tar.gz</a></li>		
+
               </ul>
             </li>
 	  </ul>
@@ -288,7 +290,8 @@
         </ul>
       </p>
 
-      <p>In addition to each of these approaches to creating a composite, there are a
+      <p>
+	In addition to each of these approaches to creating a composite, there are a
 	number of additional considerations.  For example, when summing the number of
 	biomarkers above a "risk" threshold, which threshold should be used? For some
 	biomarkers, clinical guidelines exist, but for others no standards exist.
@@ -299,12 +302,14 @@
 	beyond the risk level be used?  Is it only values that are "too high" that are
 	problematic or can biomarkers be too extreme in either direction, high or low?
       </p>
-      <p>These are just some of the methodological decisions faced. Rather than
+      <p>
+	These are just some of the methodological decisions faced. Rather than
 	leave leave these as subjective decisions, the SCORE Project
 	aims to systematically evaluate different approaches, and provide
 	empirical evidence to guide researchers and clinicians in
 	making these decisions, as well as tools to facilitate creating the
-	composite from whatever the decision.</p>
+	composite from whatever the decision.
+      </p>
 
       <h3><a id="pubs" class="anchor" href="#pubs"></a>Publications</h3>
 
@@ -312,18 +317,34 @@
          <p>Wiley, J. F., Gruenewald, T., Karlamangla, A. &amp; Seeman, T. E. (under review).
          Modeling Multisystem Physiological Dysregulation.</p>
       </blockquote>
-        <p>Mplus input scripts to run the primary models from this paper, 
-           as well as the Monte Carlo power simulation, and the 
-           item parameter invariance models is available 
-           <a href="https://github.com/JWiley/score-project/tree/master/Wiley_PsychMed_2015">
-           online here</a>.</p>
+      <p>
+	Mplus input scripts to run the primary models from this paper, 
+        as well as the Monte Carlo power simulation, and the 
+        item parameter invariance models is available 
+        <a href="https://github.com/JWiley/score-project/tree/master/Wiley_PsychMed_2015">
+          online here</a>.
+      </p>
       
       <h3><a id="software" class="anchor" href="#software"></a>Software</h3>
 
       <p>
 	There is an <code>R</code> package called <code>pscore</code> to assist with the scoring and 
 	creation of composites from biomarkers, available from this same GitHub repository.
-	Currently, it only has facilities for MSSS, but that is expanding.
+      </p>
+      <p>
+	If you'd like to install the pscore package you can get the latest
+	development version from GitHub.</p>
+      <code>
+	# uncomment line below if devtools package not available
+	# install.packages("devtools")
+	library(devtools)
+	install_github("JWiley/score-project/pscore")
+      </code>
+      <p>
+	Currently, the package is focused on metabolic syndrome, but more
+	will be coming soon to support scoring allostatic load.  Future work
+	also aims to facilitate building/testing different scoring models,
+        as well as getting predictions on new data from existing models.
       </p>
 
 
