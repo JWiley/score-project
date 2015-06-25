@@ -77,7 +77,7 @@ winsorizor <- function(d, percentile, na.rm = TRUE) {
           new.attr <- data.frame(low = low, high = high, percentile = percentile)
           rownames(new.attr) <- NULL
 
-          attributes(out) <- c(attributes(x), winsorized = list(new.attr))
+          attributes(out) <- c(attributes(x), winsorizedValues = list(new.attr))
 
           return(out)
     }
@@ -87,16 +87,16 @@ winsorizor <- function(d, percentile, na.rm = TRUE) {
     } else if (is.matrix(d) || is.data.frame(d)) {
 
         tmp <- lapply(1:ncol(d), function(i) f(d[, i], percentile = percentile, na.rm = na.rm))
-        all.attr <- do.call(rbind, lapply(tmp, function(x) attr(x, "winsorized")))
+        all.attr <- do.call(rbind, lapply(tmp, function(x) attr(x, "winsorizedValues")))
         all.attr$variable <- colnames(d)
         rownames(all.attr) <- NULL
+        out <- as.data.frame(lapply(tmp, as.vector))
 
         if (is.matrix(d)) {
-            out <- as.matrix(as.data.frame(tmp))
-        } else {
-            out <- as.data.frame(tmp)
+            out <- as.matrix(out)
         }
-        attributes(out) <- c(attributes(d), winsorized = list(all.attr))
+
+        attributes(out) <- c(attributes(d), winsorizedValues = list(all.attr))
     }
 
     return(out)

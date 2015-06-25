@@ -1,13 +1,6 @@
 #' Calculate distance scores on data in preparation for composite scoring
 #'
-#' @param d The data
-#' @param g A grouping variable
-#' @param thresholds Thresholds to use when calculating distances
-#'   (e.g., median, clinical thresholds, etc.).  If groups are used,
-#'   must be thresholds for each group (e.g., to allow separate thresholds for
-#'   females and males).
-#' @param higherisbetter A logical vector for each biomarker whether higher scores
-#'   are better or not.
+#' @param object An object of class \sQuote{CompositeData}.
 #' @param winsorize Whether to winsorize the data or not.  Defaults to \code{FALSE}.
 #'   If not \code{FALSE}, the percentile to winsorize at.  For example, .01 would be
 #'   the .01 and the 1 - .01 percentiles.
@@ -24,92 +17,53 @@
 #' # this example creates distances for the built in mtcars data
 #' # see ?mtcars for more details
 #' # The distances are calculated from the "best" in the dataset
-#' # defined by these thresholds
-#' thresholds <- with(mtcars, c(
-#'   mpg = max(mpg),
-#'   hp = max(hp),
-#'   wt = min(wt),
-#'   qsec = min(qsec)))
+#' # First we create an appropriate CompositeData class object
+#' # higher mpg & hp are better and lower wt & qsec are better
+#' d <- new("CompositeData",
+#'   mtcars[, c("mpg", "hp", "wt", "qsec")],
+#'   thresholds = list(one = with(mtcars, c(
+#'     mpg = max(mpg),
+#'     hp = max(hp),
+#'     wt = min(wt),
+#'     qsec = min(qsec)))
+#'   ),
+#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 #'
-#' # higher mpg and hp are better,
-#' # whereas lower wt and qsec are better
-#' dres <- distanceScores(mtcars[, c("mpg", "hp", "wt", "qsec")],
-#'   thresholds = list(thresholds),
-#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
-#'   saveall = TRUE)
+#' # create the distance scores
+#' dres <- distanceScores(d)
 #'
 #' # see a density plot of the distance scores
-#' dres$Density
+#' dres@density
+#' # regular summary of distance scores
+#' summary(dres@distances)
 #'
 #' # cleanup
-#' rm(thresholds, dres)
-distanceScores <- function(d, g, thresholds, higherisbetter, winsorize = FALSE, better = TRUE, na.rm = TRUE, saveall = FALSE) {
+#' rm(d, dres)
+distanceScores <- function(object, winsorize = 0, better = TRUE) {
   fcall <- match.call()
 
   # data and input checks
-  stopifnot(all(apply(d, 2, is.numeric)))
-  k <- ncol(d)
-
-  if (missing(higherisbetter)) {
-      higherisbetter <- rep(0, k)
-  }
-
-  if (missing(thresholds)) {
-      thresholds <- list(rep(0, k))
-  }
-
-  if (missing(g)) {
-      g <- rep("1", nrow(d))
-      stopifnot(identical(length(thresholds), 1L))
-      if (is.null(names(thresholds))) {
-        names(thresholds) <- "1"
-      }
-  }
-  ng <- length(unique(g))
-
-  stopifnot(identical(length(higherisbetter), k))
-  stopifnot(all(sapply(thresholds, length) == k))
-  stopifnot(identical(length(g), nrow(d)))
-
-  # handle missing values
-  if (na.rm) {
-      okindex <- which(rowSums(is.na(cbind(d, g))) == 0)
-      d <- d[okindex, ]
-      g <- g[okindex]
-      if (!identical(length(unique(g)), ng)) {
-          warning("After removing missing values, levels of grouping variable no longer equal")
-      }
-  }
-
-  if (any(unlist(thresholds) != 0) & saveall) d.original <- d
-
+  k <- ncol(object@data)
+  n <- nrow(object@data)
+  ng <- length(unique(object@groups))
 
   # create the threshold matrix
-  thresholdmatrix <- t(sapply(g, function(i) thresholds[[as.character(i)]]))
+  thresholdmatrix <- t(sapply(object@groups, function(i) object@thresholds[[as.character(i)]]))
   rownames(thresholdmatrix) <- NULL
-  colnames(thresholdmatrix) <- colnames(d)
+  colnames(thresholdmatrix) <- colnames(object@data)
 
-  if (winsorize) {
-      d <- winsorizor(d, percentile = winsorize, na.rm = TRUE)
-      winsorized <- attr(d, "winsorized")
-      if (saveall) d.winsorize <- d
-  } else {
-      winsorized <- NULL
-  }
-
+  d <- winsorizor(object@data, percentile = winsorize, na.rm = TRUE)
+  winsorizedValues <- attr(d, "winsorizedValues")
 
   d <- as.data.frame(sapply(1:k, function(i) {
-    if (higherisbetter[i] == 0) {
-      d[, i] - thresholdmatrix[, i]
-    } else if (higherisbetter[i] == 1) {
-      thresholdmatrix[, i] - d[, i]
+    if (object@higherisbetter[i] == 0) {
+      d[, i, drop = FALSE] - thresholdmatrix[, i, drop = FALSE]
+    } else if (object@higherisbetter[i] == 1) {
+      thresholdmatrix[, i, drop = FALSE] - d[, i, drop = FALSE]
     }
   }))
 
   colnames(d) <- colnames(thresholdmatrix)
-
-
-  if (saveall) d.distances <- d
 
   # if "better" than threshold are not allowed
   # than truncate at zero, otherwise leave as is
@@ -117,39 +71,19 @@ distanceScores <- function(d, g, thresholds, higherisbetter, winsorize = FALSE, 
       d <- as.data.frame(apply(d, 2, pmax, 0))
   }
 
-  if (saveall) {
-    data <- list(
-      Distance = if(!better) d.distances else NULL,
-      Winsorized = if(winsorize) d.winsorize else NULL,
-      Raw = if(exists("d.original")) d.original else NULL)
-
-    plots <- list(
-      Distance = if(!better) ldensity(cbind(d.distances, Group = g), melt = TRUE, g = "Group") else NULL,
-      Winsorized = if(winsorize) ldensity(cbind(d.winsorize, Group = g), melt = TRUE, g = "Group") else NULL,
-      Raw = if(exists("d.original")) ldensity(cbind(d.original, Group = g), melt = TRUE, g = "Group") else NULL)
-  } else {
-    plots <- data <- list(Distance = NULL, Windsorized = NULL, Raw = NULL)
-  }
-
-  out <- list(
-      Distances = d,
-      Density = ldensity(cbind(d, Group = g), melt = TRUE, g = "Group"),
-      Groups = g,
-      SavedPlots = plots, SavedData = data,
-      thresholds = thresholds, higherisbetter = higherisbetter,
-      winsorize = winsorize, winsorized = winsorized,
-      better = better, na.rm = na.rm,
-      call = fcall)
-  class(out) <- c("distancescores", "list")
-
-  return(out)
+  new("DistanceScores",
+      distances = d,
+      density = ldensity(cbind(d, Group = object@groups), melt = TRUE, g = "Group"),
+      winsorizedValues = winsorizedValues,
+      better = better,
+      call = fcall,
+      compositeData = object)
 }
-
 
 
 #' Prepare data to have a composite calculated
 #'
-#' @param object An object ready for use
+#' @param object An DistanceScores class object
 #' @param covmat The covariance matrix to use.  If missing,
 #'   austomatically calculated from the data.
 #' @param standardize A logical value whether to standardize the data or not.
@@ -161,38 +95,42 @@ distanceScores <- function(d, g, thresholds, higherisbetter, winsorize = FALSE, 
 #' # this example creates distances for the built in mtcars data
 #' # see ?mtcars for more details
 #' # The distances are calculated from the "best" in the dataset
-#' # defined by these thresholds
-#' thresholds <- with(mtcars, c(
-#'   mpg = max(mpg),
-#'   hp = max(hp),
-#'   wt = min(wt),
-#'   qsec = min(qsec)))
+#' # First we create an appropriate CompositeData class object
+#' # higher mpg & hp are better and lower wt & qsec are better
+#' d <- new("CompositeData",
+#'   mtcars[, c("mpg", "hp", "wt", "qsec")],
+#'   thresholds = list(one = with(mtcars, c(
+#'     mpg = max(mpg),
+#'     hp = max(hp),
+#'     wt = min(wt),
+#'     qsec = min(qsec)))
+#'   ),
+#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 #'
-#' # higher mpg and hp are better,
-#' # whereas lower wt and qsec are better
-#' dres <- distanceScores(mtcars[, c("mpg", "hp", "wt", "qsec")],
-#'   thresholds = list(thresholds),
-#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
-#'   saveall = TRUE)
+#' # create the distance scores
+#' dres <- distanceScores(d)
 #'
 #' # see a density plot of the distance scores
-#' dres$Density
+#' dres@density
+#' # regular summary of distance scores
+#' summary(dres@distances)
 #'
 #' # now prepare to create the composite
 #' # covariance matrix will be calculated from the data
 #' # and data will be standardized to unit variance by default
 #' cprep <- prepareComposite(dres)
+#'
+#' # examine covariance matrix
+#' round(cprep@covmat,2)
+#'
 #' # cleanup
-#' rm(thresholds, dres, cprep)
+#' rm(d, dres, cprep)
 prepareComposite <- function(object, covmat, standardize = TRUE) {
-    if (!inherits(object, "distancescores")) {
-        warning(paste("Object is not of type 'distancescores'.",
-                      "prepareComposite() may not work correctly."))
-    }
+    stopifnot(is(object, "DistanceScores"))
 
-    k <- ncol(object$Distances)
+    k <- ncol(object@distances)
     if (missing(covmat)) {
-        covmat <- cov(object$Distances)
+        covmat <- cov(object@distances, use = "pairwise.complete.obs")
     }
 
     stopifnot(identical(k, ncol(covmat)))
@@ -200,21 +138,18 @@ prepareComposite <- function(object, covmat, standardize = TRUE) {
     sigma <- sqrt(diag(covmat))
 
     if (standardize) {
-        data <- sweep(object$Distances, 2, sigma, "/")
+        data <- sweep(object@distances, 2, sigma, "/")
     } else {
-        data <- object$Distances
+        data <- object@distances
     }
 
-    out <- c(list(
-        data = data,
-        covmat = covmat,
-        sigma = sigma,
-        standardize = standardize,
-        k = k), object)
-
-    class(out) <- c("compositedata", "list")
-
-    return(out)
+  new("CompositeReady",
+      data = data,
+      covmat = covmat,
+      sigma = sigma,
+      standardize = standardize,
+      k = k,
+      distanceScores = object)
 }
 
 
@@ -289,10 +224,7 @@ prepareComposite <- function(object, covmat, standardize = TRUE) {
 #' # cleanup
 #' rm(thresholds, dres, cprep, mcomp, mcomp2)
 mahalanobisComposite <- function(object, ncomponents) {
-  if (!inherits(object, "compositedata")) {
-      warning(paste("Object is not of type 'compositedata'.",
-                    "mahalanobisComposite() may not work correctly."))
-  }
+  stopifnot(is(object, "CompositeReady"))
 
   if (missing(ncomponents)) {
     ncomponents <- object$k

@@ -4,21 +4,11 @@
 \alias{distanceScores}
 \title{Calculate distance scores on data in preparation for composite scoring}
 \usage{
-distanceScores(d, g, thresholds, higherisbetter, winsorize = FALSE,
-  better = TRUE, na.rm = TRUE, saveall = FALSE)
+distanceScores(object, winsorize = 0, better = TRUE, na.rm = TRUE,
+  saveall = FALSE)
 }
 \arguments{
-\item{d}{The data}
-
-\item{g}{A grouping variable}
-
-\item{thresholds}{Thresholds to use when calculating distances
-(e.g., median, clinical thresholds, etc.).  If groups are used,
-must be thresholds for each group (e.g., to allow separate thresholds for
-females and males).}
-
-\item{higherisbetter}{A logical vector for each biomarker whether higher scores
-are better or not.}
+\item{object}{An object of class \sQuote{CompositeData}.}
 
 \item{winsorize}{Whether to winsorize the data or not.  Defaults to \code{FALSE}.
 If not \code{FALSE}, the percentile to winsorize at.  For example, .01 would be
@@ -40,6 +30,7 @@ A list of results.
 Calculate distance scores on data in preparation for composite scoring
 }
 \examples{
+\donttest{
 # this example creates distances for the built in mtcars data
 # see ?mtcars for more details
 # The distances are calculated from the "best" in the dataset
@@ -62,6 +53,7 @@ dres$Density
 
 # cleanup
 rm(thresholds, dres)
+}
 }
 \seealso{
 Other composite: \code{\link{factorComposite}};
