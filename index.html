@@ -62,7 +62,7 @@
 		<li><a href="#software" class="btn">About the Software</a></li>
                 <li class="divider"></li>		
 		<li><a href="https://github.com/JWiley/score-project" class="btn">View on GitHub</a></li>
-		<li><a href="https://github.com/JWiley/score-project/blob/master/pscore_0.1-1.tar.gz?raw=true" class="btn">Download pscore .tar.gz</a></li>		
+		<li><a href="https://github.com/JWiley/score-project/blob/master/pscore_0.1-2.tar.gz?raw=true" class="btn">Download pscore .tar.gz</a></li>		
 		<li><a href="https://github.com/JWiley/score-project/zipball/master" class="btn">Download all .zip</a></li>
 		<li><a href="https://github.com/JWiley/score-project/tarball/master" class="btn">Download all .tar.gz</a></li>		
 
@@ -333,12 +333,16 @@
       </p>
       <p>
 	If you'd like to install the pscore package you can get the latest
-	development version from GitHub.</p>
+	development version from GitHub or install the latest released
+	version from CRAN using the code below.</p>
       <pre>
 	# uncomment line below if devtools package not available
 	# install.packages("devtools")
 	library(devtools)
-	install_github("JWiley/score-project/pscore")
+	install_github("JWiley/score-project/pscore") # latest development
+
+	# From CRAN
+	install.packages("pscore") # latest release
       </pre>
       <p>
 	Currently, the package is focused on metabolic syndrome, but more
