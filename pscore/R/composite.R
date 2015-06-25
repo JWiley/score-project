@@ -348,6 +348,8 @@ mahalanobisComposite <- function(object, ncomponents) {
   return(out)
 }
 
+# clear R CMD CHECK notes
+if(getRversion() >= "2.15.1")  utils::globalVariables(c("Component", "Eigenvalue", "Variable", "value"))
 
 #' Score Data Using a simple sum
 #'
@@ -358,6 +360,11 @@ mahalanobisComposite <- function(object, ncomponents) {
 #'   One of \dQuote{square}, \dQuote{abs}, or \dQuote{none}, which either sums the raw data,
 #'   sums the squared data and then takes the square root, or sums the absolute values of the
 #'   data.
+#' @param type A character string indicating the type of aggregation to use.
+#'   One of \dQuote{sum} or \dQuote{mean}.
+#' @param systems An optional list where each element is a character vector of the
+#'   variable names within a particular system.  If given, scores are first averaged
+#'   within a system, before being aggregated across systems.
 #' @return A list of results.
 #' @export
 #' @family composite

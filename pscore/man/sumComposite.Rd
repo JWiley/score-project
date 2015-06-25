@@ -4,7 +4,8 @@
 \alias{sumComposite}
 \title{Score Data Using a simple sum}
 \usage{
-sumComposite(object, transform = c("square", "abs", "none"))
+sumComposite(object, transform = c("square", "abs", "none"), type = c("sum",
+  "mean"), systems)
 }
 \arguments{
 \item{object}{An object ready for use}
@@ -13,6 +14,13 @@ sumComposite(object, transform = c("square", "abs", "none"))
 One of \dQuote{square}, \dQuote{abs}, or \dQuote{none}, which either sums the raw data,
 sums the squared data and then takes the square root, or sums the absolute values of the
 data.}
+
+\item{type}{A character string indicating the type of aggregation to use.
+One of \dQuote{sum} or \dQuote{mean}.}
+
+\item{systems}{An optional list where each element is a character vector of the
+variable names within a particular system.  If given, scores are first averaged
+within a system, before being aggregated across systems.}
 }
 \value{
 A list of results.
@@ -50,16 +58,41 @@ cprep <- prepareComposite(dres)
 # distances from our defined thresholds
 # by default, distances are squared, then summed, and then square rooted
 # to be back on the original scale
-scomp <- sumComposite(cprep)
+scomp <- sumComposite(cprep, "square", "sum")
 
-# view a histogram of the composite scores
+# view a histogram and summary of the composite scores
 scomp$ScoreHistogram
-
-# summarize the composite scores
 summary(scomp$Scores)
 
+# calculate average (mean) instead of sum
+scomp2 <- sumComposite(cprep, "square", "mean")
+
+# view a histogram and summary of the composite scores
+scomp2$ScoreHistogram
+summary(scomp2$Scores)
+
+# scores are still the same
+plot(scomp$Scores, scomp2$Scores)
+
+# first average scores within a system, then sum
+# note that within a system, scores are always averaged,
+# never summed.
+scomp3 <- sumComposite(cprep, "square", "sum",
+  systems = list(
+    environment = c("mpg"),
+    performance = c("hp", "qsec", "wt")))
+
+# view a histogram and summary of the composite scores
+scomp3$ScoreHistogram
+summary(scomp3$Scores)
+
+# compare all three scores
+# because of the different number of indicators within each system
+# there is a re-weighting for S3
+plot(data.frame(S1 = scomp$Scores, S2 = scomp2$Scores, S3 = scomp3$Scores))
+
 # cleanup
-rm(thresholds, dres, cprep, scomp)
+rm(thresholds, dres, cprep, scomp, scomp2, scomp3)
 }
 \seealso{
 Other composite: \code{\link{distanceScores}};

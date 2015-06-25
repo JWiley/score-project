@@ -55,7 +55,9 @@ ldensity <- function(data, melt = FALSE, x, facet, g, hist=FALSE) {
 #' @param d A vector, matrix, or data frame to be winsorized
 #' @param percentile The percentile bounded by [0, 1] to winsorize data at
 #' @param na.rm A logical whether to remove NAs.
-#' @return winsorized data.
+#' @return winsorized data. Attributes are included to list the exact values
+#'   (for each variable, if a data frame or matrix) used to winsorize
+#'   at the lower and upper ends.
 #' @export
 #' @examples
 #' dev.new(width = 10, height = 5)

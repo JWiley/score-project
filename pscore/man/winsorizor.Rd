@@ -14,7 +14,9 @@ winsorizor(d, percentile, na.rm = TRUE)
 \item{na.rm}{A logical whether to remove NAs.}
 }
 \value{
-winsorized data.
+winsorized data. Attributes are included to list the exact values
+  (for each variable, if a data frame or matrix) used to winsorize
+  at the lower and upper ends.
 }
 \description{
 Simple function winsorizes data at the specified percentile.
