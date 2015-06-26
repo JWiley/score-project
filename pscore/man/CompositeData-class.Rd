@@ -2,7 +2,6 @@
 % Please edit documentation in R/classes.R
 \docType{class}
 \name{CompositeData-class}
-\alias{CompositeData}
 \alias{CompositeData-class}
 \title{A S4 class to represent data for creating a composite}
 \description{

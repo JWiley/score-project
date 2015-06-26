@@ -5,10 +5,10 @@
 \title{Score Data Using a Factor Model}
 \usage{
 factorComposite(object, type = c("onefactor", "secondorderfactor",
-  "bifactor"), factors = "")
+  "bifactor"), factors = list(NA_character_))
 }
 \arguments{
-\item{object}{An object ready for use}
+\item{object}{An object of class \code{CompositeReady}}
 
 \item{type}{A character string indicating the type of factor model to use}
 
@@ -16,7 +16,7 @@ factorComposite(object, type = c("onefactor", "secondorderfactor",
 element is a character string of the indicator names.}
 }
 \value{
-A list of results.
+An S4 object of class \code{FactorScores}.
 }
 \description{
 Create a composite using a Factor Model
@@ -25,27 +25,33 @@ Create a composite using a Factor Model
 # this example creates distances for the built in mtcars data
 # see ?mtcars for more details
 # The distances are calculated from the "best" in the dataset
-# defined by these thresholds
-thresholds <- with(mtcars, c(
-  mpg = max(mpg),
-  hp = max(hp),
-  wt = min(wt),
-  qsec = min(qsec)))
+# First we create an appropriate CompositeData class object
+# higher mpg & hp are better and lower wt & qsec are better
+d <- new("CompositeData",
+  mtcars[, c("mpg", "hp", "wt", "qsec")],
+  thresholds = list(one = with(mtcars, c(
+    mpg = max(mpg),
+    hp = max(hp),
+    wt = min(wt),
+    qsec = min(qsec)))
+  ),
+  higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 
-# higher mpg and hp are better,
-# whereas lower wt and qsec are better
-dres <- distanceScores(mtcars[, c("mpg", "hp", "wt", "qsec")],
-  thresholds = list(thresholds),
-  higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
-  saveall = TRUE)
+# create the distance scores
+dres <- distanceScores(d)
 
 # see a density plot of the distance scores
-dres$Density
+dres@density
+# regular summary of distance scores
+summary(dres@distances)
 
 # now prepare to create the composite
 # covariance matrix will be calculated from the data
 # and data will be standardized to unit variance by default
 cprep <- prepareComposite(dres)
+
+# examine covariance matrix
+round(cprep@covmat,2)
 
 # now we can create the composite based on summing the (standardized)
 # distances from our defined thresholds
@@ -54,13 +60,28 @@ cprep <- prepareComposite(dres)
 fcomp <- factorComposite(cprep, type = "onefactor")
 
 # view a histogram of the composite scores
-fcomp$ScoreHistogram
+fcomp@scoreHistogram
 
 # summarize the composite scores
-summary(fcomp$Scores$Comp)
+summary(fcomp@scores)
+
+# we can also fit a second-order factor model
+# there are not enough indicators to identify the factor
+# and so lavaan gives us warning messages
+fcomp2 <- factorComposite(cprep, type = "secondorderfactor",
+  factors = list(speed = c("hp", "qsec")))
+
+# view a histogram of the composite scores
+fcomp2@scoreHistogram
+
+# summarize the composite scores
+summary(fcomp2@scores)
+
+# compare one and second-order factor model scores
+plot(fcomp@scores, fcomp2@scores)
 
 # cleanup
-rm(thresholds, dres, cprep, fcomp)
+rm(d, dres, cprep, fcomp, fcomp2)
 }
 \seealso{
 Other composite: \code{\link{distanceScores}};

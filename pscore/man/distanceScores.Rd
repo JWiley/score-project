@@ -4,8 +4,7 @@
 \alias{distanceScores}
 \title{Calculate distance scores on data in preparation for composite scoring}
 \usage{
-distanceScores(object, winsorize = 0, better = TRUE, na.rm = TRUE,
-  saveall = FALSE)
+distanceScores(object, winsorize = 0, better = TRUE)
 }
 \arguments{
 \item{object}{An object of class \sQuote{CompositeData}.}
@@ -30,30 +29,31 @@ A list of results.
 Calculate distance scores on data in preparation for composite scoring
 }
 \examples{
-\donttest{
 # this example creates distances for the built in mtcars data
 # see ?mtcars for more details
 # The distances are calculated from the "best" in the dataset
-# defined by these thresholds
-thresholds <- with(mtcars, c(
-  mpg = max(mpg),
-  hp = max(hp),
-  wt = min(wt),
-  qsec = min(qsec)))
+# First we create an appropriate CompositeData class object
+# higher mpg & hp are better and lower wt & qsec are better
+d <- new("CompositeData",
+  mtcars[, c("mpg", "hp", "wt", "qsec")],
+  thresholds = list(one = with(mtcars, c(
+    mpg = max(mpg),
+    hp = max(hp),
+    wt = min(wt),
+    qsec = min(qsec)))
+  ),
+  higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 
-# higher mpg and hp are better,
-# whereas lower wt and qsec are better
-dres <- distanceScores(mtcars[, c("mpg", "hp", "wt", "qsec")],
-  thresholds = list(thresholds),
-  higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
-  saveall = TRUE)
+# create the distance scores
+dres <- distanceScores(d)
 
 # see a density plot of the distance scores
-dres$Density
+dres@density
+# regular summary of distance scores
+summary(dres@distances)
 
 # cleanup
-rm(thresholds, dres)
-}
+rm(d, dres)
 }
 \seealso{
 Other composite: \code{\link{factorComposite}};

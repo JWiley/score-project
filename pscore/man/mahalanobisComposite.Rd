@@ -7,14 +7,14 @@
 mahalanobisComposite(object, ncomponents)
 }
 \arguments{
-\item{object}{An object of class \code{compositedata} ready for use}
+\item{object}{An object of class \code{CompositeReady}}
 
 \item{ncomponents}{the number of components to use from the
 principal component analysis. If missing, defaults to the
 number of columns in the data.}
 }
 \value{
-A list of results.
+An S4 object of class \code{MahalanobisScores}.
 }
 \description{
 Create a composite using the Mahalanobis Distance
@@ -23,43 +23,49 @@ Create a composite using the Mahalanobis Distance
 # this example creates distances for the built in mtcars data
 # see ?mtcars for more details
 # The distances are calculated from the "best" in the dataset
-# defined by these thresholds
-thresholds <- with(mtcars, c(
-  mpg = max(mpg),
-  hp = max(hp),
-  wt = min(wt),
-  qsec = min(qsec)))
+# First we create an appropriate CompositeData class object
+# higher mpg & hp are better and lower wt & qsec are better
+d <- new("CompositeData",
+  mtcars[, c("mpg", "hp", "wt", "qsec")],
+  thresholds = list(one = with(mtcars, c(
+    mpg = max(mpg),
+    hp = max(hp),
+    wt = min(wt),
+    qsec = min(qsec)))
+  ),
+  higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 
-# higher mpg and hp are better,
-# whereas lower wt and qsec are better
-dres <- distanceScores(mtcars[, c("mpg", "hp", "wt", "qsec")],
-  thresholds = list(thresholds),
-  higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
-  saveall = TRUE)
+# create the distance scores
+dres <- distanceScores(d)
 
 # see a density plot of the distance scores
-dres$Density
+dres@density
+# regular summary of distance scores
+summary(dres@distances)
 
 # now prepare to create the composite
 # covariance matrix will be calculated from the data
 # and data will be standardized to unit variance by default
 cprep <- prepareComposite(dres)
 
+# examine covariance matrix
+round(cprep@covmat,2)
+
 # now we can create the composite based on mahalanobis distances
 # from our defined thresholds
 mcomp <- mahalanobisComposite(cprep)
 
 # view a histogram of the composite scores
-mcomp$ScoreHistogram
+mcomp@scoreHistogram
 
 # summarize the composite scores
-summary(mcomp$Scores)
+summary(mcomp@scores)
 
 # check the screeplot and loadings
-mcomp$Screeplot
-mcomp$LoadingGraph
+mcomp@screePlot
+mcomp@loadingGraph
 # examine the loadings as a table
-mcomp$LoadingTable
+mcomp@loadingTable
 
 # one component is adequate to explain these data
 # to be safe can pick first two and re-run model
@@ -68,16 +74,16 @@ mcomp$LoadingTable
 mcomp2 <- mahalanobisComposite(cprep, ncomponents = 2)
 
 # view a histogram of the updated composite scores
-mcomp2$ScoreHistogram
+mcomp2@scoreHistogram
 
 # summarize the composite scores
-summary(mcomp2$Scores)
+summary(mcomp2@scores)
 
 # compare using all versus two components
-plot(mcomp$Scores, mcomp2$Scores)
+plot(mcomp@scores, mcomp2@scores)
 
 # cleanup
-rm(thresholds, dres, cprep, mcomp, mcomp2)
+rm(d, dres, cprep, mcomp, mcomp2)
 }
 \seealso{
 Other composite: \code{\link{distanceScores}};

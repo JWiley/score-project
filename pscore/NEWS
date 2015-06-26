@@ -1,0 +1,19 @@
+pscore 0.2.0
+------------------------------------------------------------
+
+NEW FEATURES
+
+* Added a NEWS file
+
+CHANGES
+
+* Moved to using S4 Classes
+
+pscore 0.1-1
+------------------------------------------------------------
+
+NEW FEATURES
+
+* function to winsorize data
+* function to calculate distance scores from thresholds (e.g., clinical thresholds for biomarkers)
+* Implemented three ways of creating composite scores via Mahalanobis distance, simple summing, and factor analysis

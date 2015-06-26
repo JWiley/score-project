@@ -8,7 +8,7 @@ sumComposite(object, transform = c("square", "abs", "none"), type = c("sum",
   "mean"), systems)
 }
 \arguments{
-\item{object}{An object ready for use}
+\item{object}{An object of class \code{CompositeReady}}
 
 \item{transform}{A character string indicating the type of transformation to use.
 One of \dQuote{square}, \dQuote{abs}, or \dQuote{none}, which either sums the raw data,
@@ -23,7 +23,7 @@ variable names within a particular system.  If given, scores are first averaged
 within a system, before being aggregated across systems.}
 }
 \value{
-A list of results.
+An S4 object of class \code{SumScores}.
 }
 \description{
 Create a composite using summation
@@ -32,27 +32,33 @@ Create a composite using summation
 # this example creates distances for the built in mtcars data
 # see ?mtcars for more details
 # The distances are calculated from the "best" in the dataset
-# defined by these thresholds
-thresholds <- with(mtcars, c(
-  mpg = max(mpg),
-  hp = max(hp),
-  wt = min(wt),
-  qsec = min(qsec)))
+# First we create an appropriate CompositeData class object
+# higher mpg & hp are better and lower wt & qsec are better
+d <- new("CompositeData",
+  mtcars[, c("mpg", "hp", "wt", "qsec")],
+  thresholds = list(one = with(mtcars, c(
+    mpg = max(mpg),
+    hp = max(hp),
+    wt = min(wt),
+    qsec = min(qsec)))
+  ),
+  higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 
-# higher mpg and hp are better,
-# whereas lower wt and qsec are better
-dres <- distanceScores(mtcars[, c("mpg", "hp", "wt", "qsec")],
-  thresholds = list(thresholds),
-  higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
-  saveall = TRUE)
+# create the distance scores
+dres <- distanceScores(d)
 
 # see a density plot of the distance scores
-dres$Density
+dres@density
+# regular summary of distance scores
+summary(dres@distances)
 
 # now prepare to create the composite
 # covariance matrix will be calculated from the data
 # and data will be standardized to unit variance by default
 cprep <- prepareComposite(dres)
+
+# examine covariance matrix
+round(cprep@covmat,2)
 
 # now we can create the composite based on summing the (standardized)
 # distances from our defined thresholds
@@ -61,38 +67,37 @@ cprep <- prepareComposite(dres)
 scomp <- sumComposite(cprep, "square", "sum")
 
 # view a histogram and summary of the composite scores
-scomp$ScoreHistogram
-summary(scomp$Scores)
+scomp@scoreHistogram
+summary(scomp@scores)
 
 # calculate average (mean) instead of sum
 scomp2 <- sumComposite(cprep, "square", "mean")
 
 # view a histogram and summary of the composite scores
-scomp2$ScoreHistogram
-summary(scomp2$Scores)
+scomp2@scoreHistogram
+summary(scomp2@scores)
 
-# scores are still the same
-plot(scomp$Scores, scomp2$Scores)
+# scores are still the same (just different scaling)
+plot(scomp@scores, scomp2@scores)
 
 # first average scores within a system, then sum
-# note that within a system, scores are always averaged,
-# never summed.
+# within a system, scores are always averaged, never summed
 scomp3 <- sumComposite(cprep, "square", "sum",
   systems = list(
     environment = c("mpg"),
     performance = c("hp", "qsec", "wt")))
 
 # view a histogram and summary of the composite scores
-scomp3$ScoreHistogram
-summary(scomp3$Scores)
+scomp3@scoreHistogram
+summary(scomp3@scores)
 
 # compare all three scores
 # because of the different number of indicators within each system
 # there is a re-weighting for S3
-plot(data.frame(S1 = scomp$Scores, S2 = scomp2$Scores, S3 = scomp3$Scores))
+plot(data.frame(S1 = scomp@scores, S2 = scomp2@scores, S3 = scomp3@scores))
 
 # cleanup
-rm(thresholds, dres, cprep, scomp, scomp2, scomp3)
+rm(d, dres, cprep, scomp, scomp2, scomp3)
 }
 \seealso{
 Other composite: \code{\link{distanceScores}};
