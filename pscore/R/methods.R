@@ -112,3 +112,59 @@ DistanceScores <- function(distances, distanceDensity, winsorizedValues, better,
     test <- validObject(object)
     if (isTRUE(test)) object else test
 }
+
+
+#' An constructor function for the S4 CompositeReady class
+#'
+#' @param data A data frame of the ready to use data
+#' @param covmat A covariance matrix of the data
+#' @param sigma A vector of the standard deviations of each variable
+#' @param standardize A logical whether the data were standardized or not
+#' @inheritParams DistanceScores
+#' @return An S4 object of class \dQuote{CompositeReady}
+#' @export
+#' @examples
+#' #make me!
+CompositeReady <- function(data, covmat, sigma, standardize, distances, distanceDensity, winsorizedValues, better, rawdata, groups, thresholds, higherisbetter, k) {
+    stopifnot(is.data.frame(data))
+
+    if (missing(data)) {
+        stop("data must be specified")
+    }
+
+    if (nrow(data) < 1 || ncol(data) < 1) {
+        stop("data must have at least one row and column.")
+    }
+
+    if (missing(covmat)) {
+        covmat <- matrix(NA_real_)
+    }
+
+    if (missing(sigma)) {
+        sigma <- NA_real_
+    }
+
+    if (missing(standardize)) {
+        standardize <- NA
+    }
+
+    object <- new("CompositeReady",
+                  data = data,
+                  covmat = covmat,
+                  sigma = sigma,
+                  standardize = standardize,
+                  DistanceScores(
+                    distances = distances,
+                    distanceDensity = distanceDensity,
+                    winsorizedValues = winsorizedValues,
+                    better = better,
+                    rawdata = rawdata,
+                    groups = groups,
+                    thresholds = thresholds,
+                    higherisbetter = higherisbetter,
+                    k = k)
+                  )
+
+    test <- validObject(object)
+    if (isTRUE(test)) object else test
+}

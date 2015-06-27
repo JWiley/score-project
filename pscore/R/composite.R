@@ -88,7 +88,7 @@ distanceScores <- function(object, winsorize = 0, better = TRUE) {
 #'   austomatically calculated from the data.
 #' @param standardize A logical value whether to standardize the data or not.
 #'   Defaults to \code{TRUE}.
-#' @return A list of results.
+#' @return An S4 object of class \dQuote{CompositeReady}.
 #' @export
 #' @family composite
 #' @examples
@@ -143,15 +143,22 @@ prepareComposite <- function(object, covmat, standardize = TRUE) {
         data <- object@distances
     }
 
-  new("CompositeReady",
-      data = data,
+    CompositeReady(
+      data = as.data.frame(data),
       covmat = covmat,
       sigma = sigma,
       standardize = standardize,
-      k = k,
-      distanceScores = object)
+      distances = object@distances,
+      distanceDensity = object@distanceDensity,
+      winsorizedValues = object@winsorizedValues,
+      better = object@better,
+      rawdata = object@rawdata,
+      groups = object@groups,
+      thresholds = object@thresholds,
+      higherisbetter = object@higherisbetter,
+      k = object@k
+      )
 }
-
 
 #' Score Data Using the Mahalanobis Distance
 #'
