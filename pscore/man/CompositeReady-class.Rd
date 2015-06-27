@@ -10,16 +10,12 @@ An S4 class to represent composite ready data
 \section{Slots}{
 
 \describe{
-\item{\code{data}}{A data frame ready for use}
+\item{\code{data}}{A data frame ready for use to generate composite scores}
 
 \item{\code{covmat}}{A covariance matrix}
 
 \item{\code{sigma}}{The standard deviation of each variable}
 
 \item{\code{standardize}}{A logical value whether standardization was applied}
-
-\item{\code{k}}{The number of variables}
-
-\item{\code{DistanceScores}}{The original DistanceScores class object passed in.}
 }}
 

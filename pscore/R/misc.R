@@ -12,7 +12,7 @@
 #'   used as id.var as well.
 #' @param hist Logical whether to make a density plot or histogram (if TRUE).
 #' @return A ggplot2 graph.
-#' @import ggplot2 reshape2
+#' @import methods ggplot2 reshape2
 #' @examples
 #' # simple facetted plot
 #' pscore:::ldensity(mtcars, TRUE)

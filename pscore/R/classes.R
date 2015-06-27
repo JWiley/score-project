@@ -1,3 +1,6 @@
+#' @include misc.R methods.R
+NULL
+
 #' A S4 class to represent data for creating a composite
 #'
 #' @slot rawdata A data frame of the data to be used for the composite scores
@@ -13,9 +16,8 @@
 #'   columns in the data frame, indicating whether higher is better for
 #'   each variable (if \code{TRUE}) and otherwise (if \code{FALSE}) that
 #'   lower is better, indicating that variable should be reversed.
-#' @slot k The number of variables
+#' @slot k The number of variables as an integer.
 #' @export
-#' @import methods
 setClass("CompositeData",
          slots = list(
              rawdata = "data.frame",
@@ -102,7 +104,9 @@ setClass("CompositeData",
              }
 
              if (length(errors) == 0) TRUE else errors
-         })
+           }
+
+)
 
 #' An S4 class to represent distance scores
 #'
@@ -152,7 +156,10 @@ setClass("CompositeReady",
 #' @slot screePlot A screeplot from the PCA
 #' @slot loadingGraph A graph of the component loadings
 #' @slot loadingTable A table of all the component loadings
-#' @slot compositeReady The original CompositeReady class object passed in
+#' @slot loadingMatrix A matrix of the loadings (for generating new scores)
+#' @slot sdev The PCA standard deviations (square root of eigenvalues, for generating new scores).
+#' @slot ncomponents The number of components of the PCA to be used.
+#' @slot CompositeReady The original CompositeReady class object passed in
 #' @export
 #' @rdname Scores
 setClass("MahalanobisScores",
@@ -162,16 +169,25 @@ setClass("MahalanobisScores",
      screePlot = "ANY",
      loadingGraph = "ANY",
      loadingTable = "matrix",
-     compositeReady = "CompositeReady"
+     loadingMatrix = "matrix",
+     sdev = "numeric",
+     ncomponents = "numeric",
+     CompositeReady = "CompositeReady"
      ),
  prototype = list(
-     scores = NA_real_,
-     scoreHistogram = NA,
-     screePlot = NA,
-     loadingGraph = NA,
-     loadingTable = matrix(NA_character_),
-     compositeReady = new("CompositeReady")
-     ))
+   scores = NA_real_,
+   scoreHistogram = NA,
+   screePlot = NA,
+   loadingGraph = NA,
+   loadingTable = matrix(NA_character_),
+   loadingMatrix = matrix(NA_real_),
+   sdev = NA_real_,
+   ncomponents = NA_real_,
+   CompositeReady = CompositeReady(
+     data = data.frame(NA_real_),
+     distances = data.frame(NA_real_),
+     rawdata = data.frame(0))
+   ))
 
 
 #' An S4 class to represent composite scores based on summing
@@ -185,7 +201,7 @@ setClass("MahalanobisScores",
 #'   each element is a character vector containing the variable names for
 #'   each system.  If all variables belong to one system, a list with one
 #'   element that is missing.
-#' @slot compositeReady The original CompositeReady class object passed in
+#' @slot CompositeReady The original CompositeReady class object passed in
 #' @export
 #' @rdname Scores
 setClass("SumScores",
@@ -196,7 +212,7 @@ setClass("SumScores",
              type = "character",
              trans = "list",
              systems = "list",
-             compositeReady = "CompositeReady"
+             CompositeReady = "CompositeReady"
              ),
          prototype = list(
              scores = NA_real_,
@@ -205,7 +221,7 @@ setClass("SumScores",
              type = NA_character_,
              trans = list(to = I, from = I),
              systems = list(NA_character_),
-             compositeReady = new("CompositeReady")
+             CompositeReady = new("CompositeReady")
              ))
 
 
@@ -218,7 +234,7 @@ setClass("SumScores",
 #' @slot factors A list with as many elements as there are specific factors,
 #'   where each element is a character vector of the variables for
 #'   a specific factor
-#' @slot compositeReady The original CompositeReady class object passed in
+#' @slot CompositeReady The original CompositeReady class object passed in
 #' @export
 #' @rdname Scores
 setClass("FactorScores",
@@ -228,7 +244,7 @@ setClass("FactorScores",
           factorScores = "data.frame",
           type = "character",
           factors = "list",
-          compositeReady = "CompositeReady"
+          CompositeReady = "CompositeReady"
           ),
       prototype = list(
           scores = NA_real_,
@@ -236,5 +252,5 @@ setClass("FactorScores",
           factorScores = data.frame(),
           type = NA_character_,
           factors = list(NA_character_),
-          compositeReady = new("CompositeReady")
+          CompositeReady = new("CompositeReady")
           ))

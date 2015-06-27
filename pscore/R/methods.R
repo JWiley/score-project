@@ -65,7 +65,13 @@ CompositeData <- function(rawdata, groups, thresholds, higherisbetter, k) {
 #'   Should have one row for each variable in the dataset.
 #' @param better A logical vector the same length as the number of columns in the distance scores
 #'   indicating whether higher or lower values are better for each.
-#' @inheritParams CompositeData
+#' @param rawdata A data frame with at least one row and column
+#' @param groups an optional character vector. If omitted defaults to
+#'   a character vector of all \dQuote{one}s.
+#' @param thresholds an optional named list where names match the names in groups.
+#'   If using defaults for groups, should name it \dQuote{a}.
+#' @param higherisbetter an optional logical vector
+#' @param k an optional integer, the number of columns in the raw data
 #' @return An S4 object of class \dQuote{DistanceScores}
 #' @export
 #' @examples
@@ -112,7 +118,6 @@ DistanceScores <- function(distances, distanceDensity, winsorizedValues, better,
     test <- validObject(object)
     if (isTRUE(test)) object else test
 }
-
 
 #' An constructor function for the S4 CompositeReady class
 #'
@@ -168,3 +173,4 @@ CompositeReady <- function(data, covmat, sigma, standardize, distances, distance
     test <- validObject(object)
     if (isTRUE(test)) object else test
 }
+

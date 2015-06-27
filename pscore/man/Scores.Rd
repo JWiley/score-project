@@ -26,7 +26,13 @@ An S4 class to represent composite scores based on (confirmatory) factor analysi
 
 \item{\code{loadingTable}}{A table of all the component loadings}
 
-\item{\code{compositeReady}}{The original CompositeReady class object passed in}
+\item{\code{loadingMatrix}}{A matrix of the loadings (for generating new scores)}
+
+\item{\code{sdev}}{The PCA standard deviations (square root of eigenvalues, for generating new scores).}
+
+\item{\code{ncomponents}}{The number of components of the PCA to be used.}
+
+\item{\code{CompositeReady}}{The original CompositeReady class object passed in}
 
 \item{\code{scores}}{A vector of the final scores}
 
@@ -43,7 +49,7 @@ each element is a character vector containing the variable names for
 each system.  If all variables belong to one system, a list with one
 element that is missing.}
 
-\item{\code{compositeReady}}{The original CompositeReady class object passed in}
+\item{\code{CompositeReady}}{The original CompositeReady class object passed in}
 
 \item{\code{scores}}{A vector of the final scores}
 
@@ -57,6 +63,6 @@ element that is missing.}
 where each element is a character vector of the variables for
 a specific factor}
 
-\item{\code{compositeReady}}{The original CompositeReady class object passed in}
+\item{\code{CompositeReady}}{The original CompositeReady class object passed in}
 }}
 

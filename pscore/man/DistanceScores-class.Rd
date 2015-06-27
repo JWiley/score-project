@@ -12,15 +12,11 @@ An S4 class to represent distance scores
 \describe{
 \item{\code{distances}}{A data frame of the distance scores}
 
-\item{\code{density}}{A ggplot2 density graph}
+\item{\code{distanceDensity}}{A ggplot2 density graph}
 
 \item{\code{winsorizedValues}}{A data frame of the values at which each variable was winsorized.
 If percentile is 0, that means no winsorization, and values will simply be min and max.}
 
 \item{\code{better}}{A logical value whether better scores than threshold were allowed}
-
-\item{\code{call}}{The function call}
-
-\item{\code{compositeData}}{The original CompositeData class object passed in.}
 }}
 

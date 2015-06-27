@@ -27,8 +27,7 @@ Create a composite using a Factor Model
 # The distances are calculated from the "best" in the dataset
 # First we create an appropriate CompositeData class object
 # higher mpg & hp are better and lower wt & qsec are better
-d <- new("CompositeData",
-  mtcars[, c("mpg", "hp", "wt", "qsec")],
+d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
   thresholds = list(one = with(mtcars, c(
     mpg = max(mpg),
     hp = max(hp),
@@ -38,10 +37,10 @@ d <- new("CompositeData",
   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 
 # create the distance scores
-dres <- distanceScores(d)
+dres <- prepareDistances(d)
 
 # see a density plot of the distance scores
-dres@density
+dres@distanceDensity
 # regular summary of distance scores
 summary(dres@distances)
 
@@ -84,9 +83,7 @@ plot(fcomp@scores, fcomp2@scores)
 rm(d, dres, cprep, fcomp, fcomp2)
 }
 \seealso{
-Other composite: \code{\link{distanceScores}};
-  \code{\link{mahalanobisComposite}};
-  \code{\link{prepareComposite}};
+Other composite: \code{\link{mahalanobisComposite}};
   \code{\link{sumComposite}}
 }
 

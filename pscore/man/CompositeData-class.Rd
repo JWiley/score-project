@@ -10,7 +10,7 @@ A S4 class to represent data for creating a composite
 \section{Slots}{
 
 \describe{
-\item{\code{data}}{A data frame of the data to be used for the composite scores}
+\item{\code{rawdata}}{A data frame of the data to be used for the composite scores}
 
 \item{\code{groups}}{A character string, the same length as the number of rows of
 the data indicating to which group each row belong.  May be all the same
@@ -26,5 +26,7 @@ one group).}
 columns in the data frame, indicating whether higher is better for
 each variable (if \code{TRUE}) and otherwise (if \code{FALSE}) that
 lower is better, indicating that variable should be reversed.}
+
+\item{\code{k}}{The number of variables as an integer.}
 }}
 

@@ -16,7 +16,7 @@ austomatically calculated from the data.}
 Defaults to \code{TRUE}.}
 }
 \value{
-A list of results.
+An S4 object of class \dQuote{CompositeReady}.
 }
 \description{
 Prepare data to have a composite calculated
@@ -27,8 +27,7 @@ Prepare data to have a composite calculated
 # The distances are calculated from the "best" in the dataset
 # First we create an appropriate CompositeData class object
 # higher mpg & hp are better and lower wt & qsec are better
-d <- new("CompositeData",
-  mtcars[, c("mpg", "hp", "wt", "qsec")],
+d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
   thresholds = list(one = with(mtcars, c(
     mpg = max(mpg),
     hp = max(hp),
@@ -38,10 +37,10 @@ d <- new("CompositeData",
   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 
 # create the distance scores
-dres <- distanceScores(d)
+dres <- prepareDistances(d)
 
 # see a density plot of the distance scores
-dres@density
+dres@distanceDensity
 # regular summary of distance scores
 summary(dres@distances)
 
@@ -57,9 +56,6 @@ round(cprep@covmat,2)
 rm(d, dres, cprep)
 }
 \seealso{
-Other composite: \code{\link{distanceScores}};
-  \code{\link{factorComposite}};
-  \code{\link{mahalanobisComposite}};
-  \code{\link{sumComposite}}
+Other prepare: \code{\link{prepareDistances}}
 }
 

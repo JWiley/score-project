@@ -1,4 +1,4 @@
-#' Calculate distance scores on data in preparation for composite scoring
+#' Prepare distance scores on data in preparation for composite scoring
 #'
 #' @param object An object of class \sQuote{CompositeData}.
 #' @param winsorize Whether to winsorize the data or not.  Defaults to \code{FALSE}.
@@ -6,13 +6,9 @@
 #'   the .01 and the 1 - .01 percentiles.
 #' @param better Logical indicating whether \dQuote{better} values than the threshold
 #'   are allowed. Defaults to \code{TRUE}.
-#' @param na.rm A logical whether missing values should be ommitted. Defaults to
-#'   \code{TRUE}.
-#' @param saveall A logical whether to save all intermediary datasets and graphs.
-#'   Defaults to \code{FALSE}.
-#' @return A list of results.
+#' @return An S4 object of class DistanceScores
+#' @family prepare
 #' @export
-#' @family composite
 #' @examples
 #' # this example creates distances for the built in mtcars data
 #' # see ?mtcars for more details
@@ -29,7 +25,7 @@
 #'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 #'
 #' # create the distance scores
-#' dres <- distanceScores(d)
+#' dres <- prepareDistances(d)
 #'
 #' # see a density plot of the distance scores
 #' dres@@distanceDensity
@@ -38,7 +34,7 @@
 #'
 #' # cleanup
 #' rm(d, dres)
-distanceScores <- function(object, winsorize = 0, better = TRUE) {
+prepareDistances <- function(object, winsorize = 0, better = TRUE) {
   # data and input checks
   n <- nrow(object@rawdata)
   ng <- length(unique(object@groups))
@@ -89,16 +85,15 @@ distanceScores <- function(object, winsorize = 0, better = TRUE) {
 #' @param standardize A logical value whether to standardize the data or not.
 #'   Defaults to \code{TRUE}.
 #' @return An S4 object of class \dQuote{CompositeReady}.
+#' @family prepare
 #' @export
-#' @family composite
 #' @examples
 #' # this example creates distances for the built in mtcars data
 #' # see ?mtcars for more details
 #' # The distances are calculated from the "best" in the dataset
 #' # First we create an appropriate CompositeData class object
 #' # higher mpg & hp are better and lower wt & qsec are better
-#' d <- new("CompositeData",
-#'   mtcars[, c("mpg", "hp", "wt", "qsec")],
+#' d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
 #'   thresholds = list(one = with(mtcars, c(
 #'     mpg = max(mpg),
 #'     hp = max(hp),
@@ -108,10 +103,10 @@ distanceScores <- function(object, winsorize = 0, better = TRUE) {
 #'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 #'
 #' # create the distance scores
-#' dres <- distanceScores(d)
+#' dres <- prepareDistances(d)
 #'
 #' # see a density plot of the distance scores
-#' dres@@density
+#' dres@@distanceDensity
 #' # regular summary of distance scores
 #' summary(dres@@distances)
 #'
@@ -177,8 +172,7 @@ prepareComposite <- function(object, covmat, standardize = TRUE) {
 #' # The distances are calculated from the "best" in the dataset
 #' # First we create an appropriate CompositeData class object
 #' # higher mpg & hp are better and lower wt & qsec are better
-#' d <- new("CompositeData",
-#'   mtcars[, c("mpg", "hp", "wt", "qsec")],
+#' d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
 #'   thresholds = list(one = with(mtcars, c(
 #'     mpg = max(mpg),
 #'     hp = max(hp),
@@ -188,10 +182,10 @@ prepareComposite <- function(object, covmat, standardize = TRUE) {
 #'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 #'
 #' # create the distance scores
-#' dres <- distanceScores(d)
+#' dres <- prepareDistances(d)
 #'
 #' # see a density plot of the distance scores
-#' dres@@density
+#' dres@@distanceDensity
 #' # regular summary of distance scores
 #' summary(dres@@distances)
 #'
@@ -288,7 +282,10 @@ mahalanobisComposite <- function(object, ncomponents) {
       screePlot = screeplot,
       loadingGraph = loadingsplot,
       loadingTable = ltab,
-      compositeReady = object)
+      loadingMatrix = Lbase,
+      sdev = pca$sdev,
+      ncomponents = ncomponents,
+      CompositeReady = object)
 }
 
 # clear R CMD CHECK notes
@@ -317,8 +314,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("Component", "Eigenvalue
 #' # The distances are calculated from the "best" in the dataset
 #' # First we create an appropriate CompositeData class object
 #' # higher mpg & hp are better and lower wt & qsec are better
-#' d <- new("CompositeData",
-#'   mtcars[, c("mpg", "hp", "wt", "qsec")],
+#' d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
 #'   thresholds = list(one = with(mtcars, c(
 #'     mpg = max(mpg),
 #'     hp = max(hp),
@@ -328,10 +324,10 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("Component", "Eigenvalue
 #'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 #'
 #' # create the distance scores
-#' dres <- distanceScores(d)
+#' dres <- prepareDistances(d)
 #'
 #' # see a density plot of the distance scores
-#' dres@@density
+#' dres@@distanceDensity
 #' # regular summary of distance scores
 #' summary(dres@@distances)
 #'
@@ -413,7 +409,7 @@ sumComposite <- function(object, transform = c("square", "abs", "none"), type = 
       type = type,
       trans = trans,
       systems = systems,
-      compositeReady = object)
+      CompositeReady = object)
 }
 
 
@@ -435,8 +431,7 @@ sumComposite <- function(object, transform = c("square", "abs", "none"), type = 
 #' # The distances are calculated from the "best" in the dataset
 #' # First we create an appropriate CompositeData class object
 #' # higher mpg & hp are better and lower wt & qsec are better
-#' d <- new("CompositeData",
-#'   mtcars[, c("mpg", "hp", "wt", "qsec")],
+#' d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
 #'   thresholds = list(one = with(mtcars, c(
 #'     mpg = max(mpg),
 #'     hp = max(hp),
@@ -446,10 +441,10 @@ sumComposite <- function(object, transform = c("square", "abs", "none"), type = 
 #'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 #'
 #' # create the distance scores
-#' dres <- distanceScores(d)
+#' dres <- prepareDistances(d)
 #'
 #' # see a density plot of the distance scores
-#' dres@@density
+#' dres@@distanceDensity
 #' # regular summary of distance scores
 #' summary(dres@@distances)
 #'
@@ -541,5 +536,5 @@ factorComposite <- function(object, type = c("onefactor", "secondorderfactor", "
       factorScores = factorScores,
       type = type,
       factors = factors,
-      compositeReady = object)
+      CompositeReady = object)
 }

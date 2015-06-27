@@ -5,10 +5,10 @@ Date: 2015-06-24
 Author: Joshua F. Wiley <jwiley.psych@gmail.com>
 Maintainer: Joshua F. Wiley <jwiley.psych@gmail.com>
 Description: Provides a number of functions to
-  simplify and automate the scoring, comparison, and evaluation of
-  different ways of creating composites of data.  It is particularly
-  aimed at facilitating the creation of physiological composites of
-  metabolic syndrome symptom score (MSSS) and allostatic load (AL).
+    simplify and automate the scoring, comparison, and evaluation of
+    different ways of creating composites of data.  It is particularly
+    aimed at facilitating the creation of physiological composites of
+    metabolic syndrome symptom score (MSSS) and allostatic load (AL).
 Depends:
     R (>= 3.1.0),
     methods
@@ -20,3 +20,8 @@ License: LGPL-3
 ByteCompile: true
 URL: https://jwiley.github.io/score-project/
 LazyData: true
+Collate:
+    'misc.R'
+    'methods.R'
+    'classes.R'
+    'composite.R'
