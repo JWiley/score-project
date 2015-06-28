@@ -156,8 +156,7 @@ setClass("CompositeReady",
 #' @slot screePlot A screeplot from the PCA
 #' @slot loadingGraph A graph of the component loadings
 #' @slot loadingTable A table of all the component loadings
-#' @slot loadingMatrix A matrix of the loadings (for generating new scores)
-#' @slot sdev The PCA standard deviations (square root of eigenvalues, for generating new scores).
+#' @slot pca Prinicipal component analysis results. A list (coercied from princomp output).
 #' @slot ncomponents The number of components of the PCA to be used.
 #' @slot CompositeReady The original CompositeReady class object passed in
 #' @export
@@ -169,8 +168,7 @@ setClass("MahalanobisScores",
      screePlot = "ANY",
      loadingGraph = "ANY",
      loadingTable = "matrix",
-     loadingMatrix = "matrix",
-     sdev = "numeric",
+     pca = "list",
      ncomponents = "numeric",
      CompositeReady = "CompositeReady"
      ),
@@ -180,8 +178,7 @@ setClass("MahalanobisScores",
    screePlot = NA,
    loadingGraph = NA,
    loadingTable = matrix(NA_character_),
-   loadingMatrix = matrix(NA_real_),
-   sdev = NA_real_,
+   pca = list(NA_real_),
    ncomponents = NA_real_,
    CompositeReady = CompositeReady(
      data = data.frame(NA_real_),
@@ -234,6 +231,7 @@ setClass("SumScores",
 #' @slot factors A list with as many elements as there are specific factors,
 #'   where each element is a character vector of the variables for
 #'   a specific factor
+#' @slot Fit A fitted model object from lavaan.
 #' @slot CompositeReady The original CompositeReady class object passed in
 #' @export
 #' @rdname Scores
@@ -244,6 +242,7 @@ setClass("FactorScores",
           factorScores = "data.frame",
           type = "character",
           factors = "list",
+          Fit = "ANY",
           CompositeReady = "CompositeReady"
           ),
       prototype = list(
@@ -252,5 +251,6 @@ setClass("FactorScores",
           factorScores = data.frame(),
           type = NA_character_,
           factors = list(NA_character_),
+          Fit = NA,
           CompositeReady = new("CompositeReady")
           ))

@@ -1,3 +1,10 @@
+pscore 0.3.0
+------------------------------------------------------------
+
+NEW FEATURES
+
+* Added prediction methods for Mahalanobis, Sum, and Factor scores, to use an existing model to predict scores from new data.  Models are "smart" and retain features like standardization of raw data, winsorization, etc.
+
 pscore 0.2.0
 ------------------------------------------------------------
 
@@ -5,9 +12,9 @@ NEW FEATURES
 
 * Added a NEWS file
 
-CHANGES
+MAJOR CHANGES
 
-* Moved to using S4 Classes
+* Moved to using S4 Classes for most objects
 
 pscore 0.1-1
 ------------------------------------------------------------

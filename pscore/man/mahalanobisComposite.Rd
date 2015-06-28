@@ -4,7 +4,7 @@
 \alias{mahalanobisComposite}
 \title{Score Data Using the Mahalanobis Distance}
 \usage{
-mahalanobisComposite(object, ncomponents)
+mahalanobisComposite(object, ncomponents, pca)
 }
 \arguments{
 \item{object}{An object of class \code{CompositeReady}}
@@ -12,6 +12,9 @@ mahalanobisComposite(object, ncomponents)
 \item{ncomponents}{the number of components to use from the
 principal component analysis. If missing, defaults to the
 number of columns in the data.}
+
+\item{pca}{An optional PCA object from princomp to use.
+If not passed, will be calculated from the data.}
 }
 \value{
 An S4 object of class \code{MahalanobisScores}.

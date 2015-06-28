@@ -26,9 +26,7 @@ An S4 class to represent composite scores based on (confirmatory) factor analysi
 
 \item{\code{loadingTable}}{A table of all the component loadings}
 
-\item{\code{loadingMatrix}}{A matrix of the loadings (for generating new scores)}
-
-\item{\code{sdev}}{The PCA standard deviations (square root of eigenvalues, for generating new scores).}
+\item{\code{pca}}{Prinicipal component analysis results. A list (coercied from princomp output).}
 
 \item{\code{ncomponents}}{The number of components of the PCA to be used.}
 
@@ -62,6 +60,8 @@ element that is missing.}
 \item{\code{factors}}{A list with as many elements as there are specific factors,
 where each element is a character vector of the variables for
 a specific factor}
+
+\item{\code{Fit}}{A fitted model object from lavaan.}
 
 \item{\code{CompositeReady}}{The original CompositeReady class object passed in}
 }}

@@ -4,12 +4,19 @@
 \alias{winsorizor}
 \title{Winsorize at specified percentiles}
 \usage{
-winsorizor(d, percentile, na.rm = TRUE)
+winsorizor(d, percentile, values, na.rm = TRUE)
 }
 \arguments{
 \item{d}{A vector, matrix, or data frame to be winsorized}
 
-\item{percentile}{The percentile bounded by [0, 1] to winsorize data at}
+\item{percentile}{The percentile bounded by [0, 1] to winsorize data at.
+If a data frame or matrix is provided for the data, this should have the
+same length as the number of columns, or it will be repeated for all.}
+
+\item{values}{If values are specified, use these instead of calculating by percentiles.
+Should be a data frame with columns named \dQuote{low}, and \dQuote{high}.
+If a data frame or matrix is provided for the data, there should be as many rows
+for values to winsorize at as there are columns in the data.}
 
 \item{na.rm}{A logical whether to remove NAs.}
 }

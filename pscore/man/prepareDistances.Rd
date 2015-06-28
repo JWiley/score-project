@@ -4,7 +4,7 @@
 \alias{prepareDistances}
 \title{Prepare distance scores on data in preparation for composite scoring}
 \usage{
-prepareDistances(object, winsorize = 0, better = TRUE)
+prepareDistances(object, winsorize = 0, values, better = TRUE)
 }
 \arguments{
 \item{object}{An object of class \sQuote{CompositeData}.}
@@ -12,6 +12,9 @@ prepareDistances(object, winsorize = 0, better = TRUE)
 \item{winsorize}{Whether to winsorize the data or not.  Defaults to \code{FALSE}.
 If not \code{FALSE}, the percentile to winsorize at.  For example, .01 would be
 the .01 and the 1 - .01 percentiles.}
+
+\item{values}{The values to use for winsorization.  Optional.  If specified, preempts
+the percentiles given by winsorize.}
 
 \item{better}{Logical indicating whether \dQuote{better} values than the threshold
 are allowed. Defaults to \code{TRUE}.}

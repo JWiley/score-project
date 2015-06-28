@@ -4,6 +4,8 @@
 #' @param winsorize Whether to winsorize the data or not.  Defaults to \code{FALSE}.
 #'   If not \code{FALSE}, the percentile to winsorize at.  For example, .01 would be
 #'   the .01 and the 1 - .01 percentiles.
+#' @param values The values to use for winsorization.  Optional.  If specified, preempts
+#'   the percentiles given by winsorize.
 #' @param better Logical indicating whether \dQuote{better} values than the threshold
 #'   are allowed. Defaults to \code{TRUE}.
 #' @return An S4 object of class DistanceScores
@@ -34,7 +36,7 @@
 #'
 #' # cleanup
 #' rm(d, dres)
-prepareDistances <- function(object, winsorize = 0, better = TRUE) {
+prepareDistances <- function(object, winsorize = 0, values, better = TRUE) {
   # data and input checks
   n <- nrow(object@rawdata)
   ng <- length(unique(object@groups))
@@ -44,7 +46,7 @@ prepareDistances <- function(object, winsorize = 0, better = TRUE) {
   rownames(thresholdmatrix) <- NULL
   colnames(thresholdmatrix) <- colnames(object@rawdata)
 
-  d <- winsorizor(object@rawdata, percentile = winsorize, na.rm = TRUE)
+  d <- winsorizor(object@rawdata, percentile = winsorize, values = values, na.rm = TRUE)
   winsorizedValues <- attr(d, "winsorizedValues")
 
   d <- as.data.frame(sapply(1:object@k, function(i) {
@@ -63,9 +65,15 @@ prepareDistances <- function(object, winsorize = 0, better = TRUE) {
       d <- as.data.frame(apply(d, 2, pmax, 0))
   }
 
+  if (n > 2) {
+    dplot <- ldensity(cbind(d, Group = object@groups), melt = TRUE, g = "Group")
+  } else {
+    dplot <- NA
+  }
+
   DistanceScores(
       distances = d,
-      distanceDensity = ldensity(cbind(d, Group = object@groups), melt = TRUE, g = "Group"),
+      distanceDensity = dplot,
       winsorizedValues = winsorizedValues,
       better = better,
       rawdata = object@rawdata,
@@ -163,6 +171,8 @@ prepareComposite <- function(object, covmat, standardize = TRUE) {
 #' @param ncomponents the number of components to use from the
 #'   principal component analysis. If missing, defaults to the
 #'   number of columns in the data.
+#' @param pca An optional PCA object from princomp to use.
+#'   If not passed, will be calculated from the data.
 #' @return An S4 object of class \code{MahalanobisScores}.
 #' @export
 #' @family composite
@@ -230,7 +240,7 @@ prepareComposite <- function(object, covmat, standardize = TRUE) {
 #'
 #' # cleanup
 #' rm(d, dres, cprep, mcomp, mcomp2)
-mahalanobisComposite <- function(object, ncomponents) {
+mahalanobisComposite <- function(object, ncomponents, pca) {
   stopifnot(is(object, "CompositeReady"))
 
   if (missing(ncomponents)) {
@@ -239,7 +249,9 @@ mahalanobisComposite <- function(object, ncomponents) {
 
   stopifnot(ncomponents <= object@k)
 
-  pca <- princomp(scores = FALSE, cor = object@standardize, covmat = object@covmat)
+  if (missing(pca)) {
+    pca <- princomp(scores = FALSE, cor = object@standardize, covmat = object@covmat)
+  }
 
   screeplot <- ggplot(data.frame(Component = 1:object@k, Eigenvalue = pca$sdev^2),
     aes(Component, Eigenvalue)) +
@@ -276,14 +288,15 @@ mahalanobisComposite <- function(object, ncomponents) {
   # alternate way
   # finalScores <- sqrt(rowSums((data %*% solve(cov2cor(covmat))) * data))
 
+  class(pca) <- "list"
+
   new("MahalanobisScores",
       scores = finalScores,
       scoreHistogram = ldensity(data.frame(Scores = finalScores), x = "Scores", hist = TRUE),
       screePlot = screeplot,
       loadingGraph = loadingsplot,
       loadingTable = ltab,
-      loadingMatrix = Lbase,
-      sdev = pca$sdev,
+      pca = pca,
       ncomponents = ncomponents,
       CompositeReady = object)
 }
@@ -536,5 +549,6 @@ factorComposite <- function(object, type = c("onefactor", "secondorderfactor", "
       factorScores = factorScores,
       type = type,
       factors = factors,
+      Fit = fit,
       CompositeReady = object)
 }

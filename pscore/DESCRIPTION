@@ -1,6 +1,6 @@
 Package: pscore
 Title: Standardizing Physiological Composite Risk Endpoints
-Version: 0.2.0
+Version: 0.3.0
 Date: 2015-06-24
 Author: Joshua F. Wiley <jwiley.psych@gmail.com>
 Maintainer: Joshua F. Wiley <jwiley.psych@gmail.com>
@@ -25,3 +25,4 @@ Collate:
     'methods.R'
     'classes.R'
     'composite.R'
+    'predictions.R'
