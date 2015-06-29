@@ -406,9 +406,9 @@ sumComposite <- function(object, transform = c("square", "abs", "none"), type = 
                none = list(to = I, back = I))
 
   if (!missing(systems)) {
-      x <- sapply(systems, function(v) {
+      x <- do.call(cbind, lapply(systems, function(v) {
         rowMeans(trans$to(object@data[, v, drop = FALSE]))
-      })
+      }))
       finalScores <- trans$back(aggregator(x))
   } else {
       finalScores <- trans$back(aggregator(trans$to(object@data)))
@@ -416,7 +416,7 @@ sumComposite <- function(object, transform = c("square", "abs", "none"), type = 
   }
 
   new("SumScores",
-      scores = finalScores,
+      scores = as.numeric(finalScores),
       scoreHistogram = ldensity(data.frame(Scores = finalScores), x = "Scores", hist = TRUE),
       transform = transform,
       type = type,
