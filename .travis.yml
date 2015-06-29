@@ -1,10 +1,9 @@
 language: r
 sudo: required
 
-r_github_packages:
-  - hadley/devtools
-  - hadley/testthat
-  - jimhester/covr
+r_packages:
+ - devtools
+ - testthat
 
 install:
-  - cd pscore
+ - cd pscore
