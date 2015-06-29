@@ -4,6 +4,7 @@ pscore 0.3.0
 NEW FEATURES
 
 * Added prediction methods for Mahalanobis, Sum, and Factor scores, to use an existing model to predict scores from new data.  Models are "smart" and retain features like standardization of raw data, winsorization, etc.
+* Added support for raw data transformations, which also apply to thresholds and are carried forward for predictions.
 
 pscore 0.2.0
 ------------------------------------------------------------
