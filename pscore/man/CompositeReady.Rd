@@ -5,7 +5,8 @@
 \title{An constructor function for the S4 CompositeReady class}
 \usage{
 CompositeReady(data, covmat, sigma, standardize, distances, distanceDensity,
-  winsorizedValues, better, rawdata, groups, thresholds, higherisbetter, k)
+  winsorizedValues, better, rawdata, groups, thresholds, higherisbetter, k,
+  rawtrans)
 }
 \arguments{
 \item{data}{A data frame of the ready to use data}
@@ -38,6 +39,8 @@ If using defaults for groups, should name it \dQuote{a}.}
 \item{higherisbetter}{an optional logical vector}
 
 \item{k}{an optional integer, the number of columns in the raw data}
+
+\item{rawtrans}{A list of functions to transform the raw data (and thresholds).}
 }
 \value{
 An S4 object of class \dQuote{CompositeReady}

@@ -28,5 +28,7 @@ each variable (if \code{TRUE}) and otherwise (if \code{FALSE}) that
 lower is better, indicating that variable should be reversed.}
 
 \item{\code{k}}{The number of variables as an integer.}
+
+\item{\code{rawtrans}}{A list of functions to transform the raw data (and thresholds).}
 }}
 

@@ -25,6 +25,36 @@ An object of S4 class \dQuote{CompositeReady}
 Internal function to prepare data for prediction
 }
 \examples{
-# make me!!
+d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
+                   thresholds = list(one = with(mtcars, c(
+                                     mpg = max(mpg),
+                                     hp = max(hp),
+                                     wt = min(wt),
+                                     qsec = min(qsec)))),
+                   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
+## create the distance scores
+dres <- prepareDistances(d)
+## prepare to create the composite
+cprep <- prepareComposite(dres)
+
+## create composite based on summing the (standardized)
+scomp <- sumComposite(cprep, "square", "sum")
+## use model to generate predictions on new data
+predictCS(scomp,
+          newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
+          groups = "one")
+
+## create composite based on mahalanobis distances
+mcomp <- mahalanobisComposite(cprep)
+## use model to generate predictions on new data
+predictCS(mcomp,
+          newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
+          groups = "one")
+## create composite based on factor scores
+fcomp <- factorComposite(cprep, type = "onefactor")
+## use model to generate predictions on new data
+predictCS(fcomp,
+          newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
+          groups = "one")
 }
 

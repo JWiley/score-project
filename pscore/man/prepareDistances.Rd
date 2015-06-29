@@ -38,7 +38,13 @@ d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
     wt = min(wt),
     qsec = min(qsec)))
   ),
-  higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
+  higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
+  rawtrans = list(
+    mpg = function(x) x,
+    hp = function(x) x,
+    wt = function(x) x,
+    qsec = sqrt))
+
 
 # create the distance scores
 dres <- prepareDistances(d)
