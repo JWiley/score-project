@@ -20,18 +20,30 @@
 #' pscore:::ldensity(mtcars, x = "mpg", g = "factor(cyl)")
 ldensity <- function(data, melt = FALSE, x, facet, g, hist=FALSE) {
     data <- as.data.frame(data)
+
     if (melt) {
+        if (!missing(x)) stop("Cannot specifiy both melt = TRUE and an 'x' variable")
+        if (!missing(facet)) stop("Cannot specifiy both melt = TRUE and a facet variable")
+
+
         if (!missing(g)) {
-            data <- melt(data, id.var = g)
+            data <- melt(data, measure.vars = setdiff(colnames(data), g), id.var = g)
         } else {
-            data <- melt(data)
+            data <- melt(data, measure.vars = colnames(data))
         }
         x <- "value"
         facet <- ~variable
     }
 
     if (!missing(g)) {
-        p <- ggplot(data, aes_string(x = x, color = g))
+        if (!(is.character(data[, g]) || is.factor(data[, g]))) {
+            data[, g] <- factor(data[, g])
+        }
+        if (hist) {
+            p <- ggplot(data, aes_string(x = x, color = g, fill = g))
+        } else {
+            p <- ggplot(data, aes_string(x = x, color = g))
+        }
     } else {
         p <- ggplot(data, aes_string(x = x))
     }
