@@ -32,6 +32,6 @@ density plots, potentially for many variables and coloured by group.
 # simple facetted plot
 pscore:::ldensity(mtcars, TRUE)
 # simple coloured plot
-pscore:::ldensity(mtcars, x = "mpg", g = "factor(cyl)")
+pscore:::ldensity(mtcars, x = "mpg", g = "cyl")
 }
 

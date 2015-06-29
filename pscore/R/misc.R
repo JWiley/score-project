@@ -17,7 +17,7 @@
 #' # simple facetted plot
 #' pscore:::ldensity(mtcars, TRUE)
 #' # simple coloured plot
-#' pscore:::ldensity(mtcars, x = "mpg", g = "factor(cyl)")
+#' pscore:::ldensity(mtcars, x = "mpg", g = "cyl")
 ldensity <- function(data, melt = FALSE, x, facet, g, hist=FALSE) {
     data <- as.data.frame(data)
 

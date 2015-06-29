@@ -11,13 +11,13 @@ Description: Provides a number of functions to
     metabolic syndrome symptom score (MSSS) and allostatic load (AL).
 Depends:
     R (>= 3.1.0),
-    methods,
-    testthat,
-    devtools
+    methods
 Imports:
     ggplot2,
     reshape2,
     lavaan
+Suggests:
+    testthat
 License: LGPL-3
 ByteCompile: true
 URL: https://jwiley.github.io/score-project/
