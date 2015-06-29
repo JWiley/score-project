@@ -17,6 +17,7 @@ NULL
 #'   each variable (if \code{TRUE}) and otherwise (if \code{FALSE}) that
 #'   lower is better, indicating that variable should be reversed.
 #' @slot k The number of variables as an integer.
+#' @slot rawtrans A list of functions to transform the raw data (and thresholds).
 #' @export
 setClass("CompositeData",
          slots = list(
@@ -24,13 +25,15 @@ setClass("CompositeData",
              groups = "character",
              thresholds = "list",
              higherisbetter = "logical",
-             k = "integer"),
+             k = "integer",
+             rawtrans = "list"),
          prototype = list(
              rawdata = data.frame(),
              groups = NA_character_,
              thresholds = list(),
              higherisbetter = NA,
-             k = NA_integer_),
+             k = NA_integer_,
+             rawtrans = list()),
          validity = function(object) {
              errors <- character()
              row_data <- nrow(object@rawdata)
@@ -42,6 +45,7 @@ setClass("CompositeData",
              length_hisb <- length(object@higherisbetter)
              tnames <- names(object@thresholds)
              gnames <- unique(object@groups)
+             length_rawtrans <- length(object@rawtrans)
 
              if (!all(apply(object@rawdata, 2, is.numeric))) {
                  msg <- "All columns in the data must be numeric"
@@ -99,6 +103,13 @@ setClass("CompositeData",
 
              if (!identical(col_data, object@k)) {
                  msg <- paste0("k is ", object@k,
+                               ".  Should be ", col_data, ".")
+                 errors <- c(errors, msg)
+             }
+
+             if (!identical(length_rawtrans, col_data)) {
+                 msg <- paste0("The length of the transformations is ",
+                               length_rawtrans,
                                ".  Should be ", col_data, ".")
                  errors <- c(errors, msg)
              }

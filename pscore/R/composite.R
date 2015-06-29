@@ -24,7 +24,13 @@
 #'     wt = min(wt),
 #'     qsec = min(qsec)))
 #'   ),
-#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
+#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
+#'   rawtrans = list(
+#'     mpg = function(x) x,
+#'     hp = function(x) x,
+#'     wt = function(x) x,
+#'     qsec = sqrt))
+#'
 #'
 #' # create the distance scores
 #' dres <- prepareDistances(d)
@@ -41,12 +47,27 @@ prepareDistances <- function(object, winsorize = 0, values, better = TRUE) {
   n <- nrow(object@rawdata)
   ng <- length(unique(object@groups))
 
-  # create the threshold matrix
-  thresholdmatrix <- t(sapply(object@groups, function(i) object@thresholds[[as.character(i)]]))
+
+  ## transform thresholds to match raw data transformations
+  thresholds <- object@thresholds
+  thresholds <- lapply(thresholds, function(x) {
+    sapply(1:object@k, function(i) {
+      object@rawtrans[[i]](x[i])
+    })
+  })
+
+  ## create the threshold matrix using the (transformed) thresholds
+  thresholdmatrix <- t(sapply(object@groups, function(i) thresholds[[as.character(i)]]))
   rownames(thresholdmatrix) <- NULL
   colnames(thresholdmatrix) <- colnames(object@rawdata)
 
-  d <- winsorizor(object@rawdata, percentile = winsorize, values = values, na.rm = TRUE)
+  ## transform raw data, prior to windsorizing
+  d <- object@rawdata
+  d[] <- lapply(1:object@k, function(i) {
+    object@rawtrans[[i]](d[, i])
+  })
+
+  d <- winsorizor(d, percentile = winsorize, values = values, na.rm = TRUE)
   winsorizedValues <- attr(d, "winsorizedValues")
 
   d <- as.data.frame(sapply(1:object@k, function(i) {
@@ -80,7 +101,8 @@ prepareDistances <- function(object, winsorize = 0, values, better = TRUE) {
       groups = object@groups,
       thresholds = object@thresholds,
       higherisbetter = object@higherisbetter,
-      k = object@k
+      k = object@k,
+      rawtrans = object@rawtrans
       )
 }
 
@@ -159,7 +181,8 @@ prepareComposite <- function(object, covmat, standardize = TRUE) {
       groups = object@groups,
       thresholds = object@thresholds,
       higherisbetter = object@higherisbetter,
-      k = object@k
+      k = object@k,
+      rawtrans = object@rawtrans
       )
 }
 

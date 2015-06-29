@@ -23,7 +23,9 @@
                      groups = groups,
                      thresholds = thresholds,
                      higherisbetter = object@CompositeReady@higherisbetter,
-                     k = object@CompositeReady@k)
+                     k = object@CompositeReady@k,
+                     rawtrans = object@CompositeReady@rawtrans)
+
   dres <- prepareDistances(d,
                            winsorize = object@CompositeReady@winsorizedValues$percentile,
                            values = object@CompositeReady@winsorizedValues,
@@ -47,7 +49,37 @@
 #' @return An object of S4 class \dQuote{CompositeReady}
 #' @export
 #' @examples
-#' # make me!!
+#' d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
+#'                    thresholds = list(one = with(mtcars, c(
+#'                                      mpg = max(mpg),
+#'                                      hp = max(hp),
+#'                                      wt = min(wt),
+#'                                      qsec = min(qsec)))),
+#'                    higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
+#' ## create the distance scores
+#' dres <- prepareDistances(d)
+#' ## prepare to create the composite
+#' cprep <- prepareComposite(dres)
+#'
+#' ## create composite based on summing the (standardized)
+#' scomp <- sumComposite(cprep, "square", "sum")
+#' ## use model to generate predictions on new data
+#' predictCS(scomp,
+#'           newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
+#'           groups = "one")
+#'
+#' ## create composite based on mahalanobis distances
+#' mcomp <- mahalanobisComposite(cprep)
+#' ## use model to generate predictions on new data
+#' predictCS(mcomp,
+#'           newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
+#'           groups = "one")
+#' ## create composite based on factor scores
+#' fcomp <- factorComposite(cprep, type = "onefactor")
+#' ## use model to generate predictions on new data
+#' predictCS(fcomp,
+#'           newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
+#'           groups = "one")
 predictCS <- function(object, newdata, groups) {
 
   cprep <- .preparePredict(object, newdata, groups)
@@ -56,17 +88,17 @@ predictCS <- function(object, newdata, groups) {
     if (is.na(object@systems[[1]])) {
       comp <- sumComposite(cprep,
                            transform = object@transform,
-                           type = object@type)
+                           type = object@type)@scores
     } else {
         comp <- sumComposite(cprep,
                              transform = object@transform,
                              type = object@type,
-                             systems = object@systems)
+                             systems = object@systems)@scores
     }
   } else if (is(object, "MahalanobisScores")) {
       comp <- mahalanobisComposite(cprep,
                                    ncomponents = object@ncomponents,
-                                   pca = object@pca)
+                                   pca = object@pca)@scores
   } else if (is(object, "FactorScores")) {
       comp <- as.data.frame(predict(object@Fit, newdata = cprep@data))
   } else {
@@ -75,22 +107,3 @@ predictCS <- function(object, newdata, groups) {
 
   return(comp)
 }
-
-## Examples or unit tests
-## maybe add a tests directory to make sure these things work?
-## testit1 <- predictCS(mcomp, newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")], groups = "one")
-## testit2 <- predictCS(scomp, newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")], groups = "one")
-## testit3 <- predictCS(fcomp, newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")], groups = "one")
-
-## all.equal(
-##   testit1@scores,
-##   mcomp@scores[1])
-
-## all.equal(
-##   testit2@scores,
-##   scomp@scores[1])
-
-## all.equal(
-##   testit3@scores,
-##   fcomp@scores[1])
-

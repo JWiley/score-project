@@ -4,20 +4,53 @@
 #' @param groups an optional character vector. If omitted defaults to
 #'   a character vector of all \dQuote{one}s.
 #' @param thresholds an optional named list where names match the names in groups.
-#'   If using defaults for groups, should name it \dQuote{a}.
+#'   If using defaults for groups, should name it \dQuote{one}.
 #' @param higherisbetter an optional logical vector
 #' @param k an optional integer, the number of columns in the raw data
+#' @param rawtrans A list of functions to transform the raw data (and thresholds).
+#'   This list should be in the same order as the variables.  For variables
+#'   that should not be transformed, use: \code{function(x) x}.
 #' @return An S4 object of class \dQuote{CompositeData}
 #' @export
 #' @examples
-#' #make me!
-CompositeData <- function(rawdata, groups, thresholds, higherisbetter, k) {
+#' ## no custom raw data transformations
+#' d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
+#'   thresholds = list(one = with(mtcars, c(
+#'     mpg = max(mpg),
+#'     hp = max(hp),
+#'     wt = min(wt),
+#'     qsec = min(qsec)))
+#'   ),
+#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
+#'
+#' ## square root transform qsec
+#' d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
+#'   thresholds = list(one = with(mtcars, c(
+#'     mpg = max(mpg),
+#'     hp = max(hp),
+#'     wt = min(wt),
+#'     qsec = min(qsec)))
+#'   ),
+#'   higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
+#'   rawtrans = list(
+#'     mpg = function(x) x,
+#'     hp = function(x) x,
+#'     wt = function(x) x,
+#'     qsec = sqrt))
+#'
+#' ## cleanup
+#' rm(d)
+CompositeData <- function(rawdata, groups, thresholds, higherisbetter, k, rawtrans) {
     if (missing(rawdata)) {
         stop("rawdata must be specified")
     }
 
     if (nrow(rawdata) < 1 || ncol(rawdata) < 1) {
         stop("rawdata must have at least one row and column.")
+    }
+
+    if (missing(k)) {
+        k <- ncol(rawdata)
     }
 
     if (missing(groups)) {
@@ -28,6 +61,11 @@ CompositeData <- function(rawdata, groups, thresholds, higherisbetter, k) {
         warnings("Groups cannot have missing data and these rows of data are dropped")
         rawdata <- rawdata[!is.na(groups), , drop = FALSE]
         groups <- groups[!is.na(groups)]
+    }
+
+    if (missing(rawtrans)) {
+        rawtrans <- rep(list(function(x) x), k)
+        names(rawtrans) <- colnames(data)
     }
 
     if (missing(thresholds)) {
@@ -41,16 +79,13 @@ CompositeData <- function(rawdata, groups, thresholds, higherisbetter, k) {
         higherisbetter <- rep(TRUE, ncol(rawdata))
     }
 
-    if (missing(k)) {
-        k <- ncol(rawdata)
-    }
-
     object <- new("CompositeData",
                   rawdata = rawdata,
                   groups = groups,
                   thresholds = thresholds,
                   higherisbetter = higherisbetter,
-                  k = k)
+                  k = k,
+                  rawtrans = rawtrans)
 
     test <- validObject(object)
     if (isTRUE(test)) object else test
@@ -72,11 +107,12 @@ CompositeData <- function(rawdata, groups, thresholds, higherisbetter, k) {
 #'   If using defaults for groups, should name it \dQuote{a}.
 #' @param higherisbetter an optional logical vector
 #' @param k an optional integer, the number of columns in the raw data
+#' @param rawtrans A list of functions to transform the raw data (and thresholds).
 #' @return An S4 object of class \dQuote{DistanceScores}
 #' @export
 #' @examples
 #' #make me!
-DistanceScores <- function(distances, distanceDensity, winsorizedValues, better, rawdata, groups, thresholds, higherisbetter, k) {
+DistanceScores <- function(distances, distanceDensity, winsorizedValues, better, rawdata, groups, thresholds, higherisbetter, k, rawtrans) {
     stopifnot(is.data.frame(distances))
 
     if (missing(distances)) {
@@ -112,7 +148,8 @@ DistanceScores <- function(distances, distanceDensity, winsorizedValues, better,
                       groups = groups,
                       thresholds = thresholds,
                       higherisbetter = higherisbetter,
-                      k = k)
+                      k = k,
+                      rawtrans = rawtrans)
                   )
 
     test <- validObject(object)
@@ -130,7 +167,7 @@ DistanceScores <- function(distances, distanceDensity, winsorizedValues, better,
 #' @export
 #' @examples
 #' #make me!
-CompositeReady <- function(data, covmat, sigma, standardize, distances, distanceDensity, winsorizedValues, better, rawdata, groups, thresholds, higherisbetter, k) {
+CompositeReady <- function(data, covmat, sigma, standardize, distances, distanceDensity, winsorizedValues, better, rawdata, groups, thresholds, higherisbetter, k, rawtrans) {
     stopifnot(is.data.frame(data))
 
     if (missing(data)) {
@@ -167,7 +204,8 @@ CompositeReady <- function(data, covmat, sigma, standardize, distances, distance
                     groups = groups,
                     thresholds = thresholds,
                     higherisbetter = higherisbetter,
-                    k = k)
+                    k = k,
+                    rawtrans = rawtrans)
                   )
 
     test <- validObject(object)
