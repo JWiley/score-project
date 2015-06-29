@@ -3,4 +3,6 @@
 ^cran-comments\.md$
 ^appveyor\.yml$
 ^revdep$
+\.gitignore
+\.Rhistory
 ^.\..~$
