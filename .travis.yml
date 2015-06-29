@@ -1,5 +1,7 @@
 language: r
 
+sudo: required
+
 install:
   - cd pscore
 
