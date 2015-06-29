@@ -1,7 +1,7 @@
 Package: pscore
 Title: Standardizing Physiological Composite Risk Endpoints
 Version: 0.3.0
-Date: 2015-06-24
+Date: 2015-06-29
 Author: Joshua F. Wiley <jwiley.psych@gmail.com>
 Maintainer: Joshua F. Wiley <jwiley.psych@gmail.com>
 Description: Provides a number of functions to
@@ -16,6 +16,7 @@ Imports:
     ggplot2,
     reshape2,
     lavaan
+SUGGESTS: testthat
 License: LGPL-3
 ByteCompile: true
 URL: https://jwiley.github.io/score-project/
