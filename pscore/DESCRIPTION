@@ -1,7 +1,7 @@
 Package: pscore
 Title: Standardizing Physiological Composite Risk Endpoints
-Version: 0.3.0
-Date: 2015-06-29
+Version: 0.3.1
+Date: 2015-07-16
 Author: Joshua F. Wiley <jwiley.psych@gmail.com>
 Maintainer: Joshua F. Wiley <jwiley.psych@gmail.com>
 Description: Provides a number of functions to
@@ -13,6 +13,7 @@ Depends:
     R (>= 3.1.0),
     methods
 Imports:
+    stats,
     ggplot2,
     reshape2,
     lavaan

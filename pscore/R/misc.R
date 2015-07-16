@@ -76,6 +76,7 @@ ldensity <- function(data, melt = FALSE, x, facet, g, hist=FALSE) {
 #' @return winsorized data. Attributes are included to list the exact values
 #'   (for each variable, if a data frame or matrix) used to winsorize
 #'   at the lower and upper ends.
+#' @importFrom stats quantile
 #' @export
 #' @examples
 #' dev.new(width = 10, height = 5)

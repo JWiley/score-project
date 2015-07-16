@@ -65,7 +65,7 @@ CompositeData <- function(rawdata, groups, thresholds, higherisbetter, k, rawtra
 
     if (missing(rawtrans)) {
         rawtrans <- rep(list(function(x) x), k)
-        names(rawtrans) <- colnames(data)
+        names(rawtrans) <- colnames(rawdata)
     }
 
     if (missing(thresholds)) {

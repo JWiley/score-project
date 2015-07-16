@@ -116,6 +116,7 @@ prepareDistances <- function(object, winsorize = 0, values, better = TRUE) {
 #'   Defaults to \code{TRUE}.
 #' @return An S4 object of class \dQuote{CompositeReady}.
 #' @family prepare
+#' @importFrom stats cov
 #' @export
 #' @examples
 #' # this example creates distances for the built in mtcars data
@@ -198,6 +199,7 @@ prepareComposite <- function(object, covmat, standardize = TRUE) {
 #'   If not passed, will be calculated from the data.
 #' @return An S4 object of class \code{MahalanobisScores}.
 #' @export
+#' @importFrom stats princomp
 #' @family composite
 #' @examples
 #' # this example creates distances for the built in mtcars data
