@@ -234,7 +234,7 @@ prepareComposite <- function(object, covmat, standardize = TRUE) {
 #'
 #' # now we can create the composite based on mahalanobis distances
 #' # from our defined thresholds
-#' mcomp <- mahalanobisComposite(cprep)
+#' mcomp <- mahalanobisComposite(cprep, 1)
 #'
 #' # view a histogram of the composite scores
 #' mcomp@@scoreHistogram
@@ -291,7 +291,7 @@ mahalanobisComposite <- function(object, ncomponents, pca) {
   colnames(ltab) <- paste0("C", 1:object@k)
   ltab[] <- format(round(ltab, 2), nsmall=2, digits=2)
 
-  L <- as.data.frame(pca$loadings[, 1:ncomponents])
+  L <- as.data.frame(pca$loadings[, 1:ncomponents, drop = FALSE])
   colnames(L) <- paste0("Comp", 1:ncomponents)
   L$Variable <- factor(rownames(L), levels = colnames(object@data)[1:ncomponents])
   L <- melt(L, id.vars = "Variable")
@@ -309,7 +309,7 @@ mahalanobisComposite <- function(object, ncomponents, pca) {
   c.scores <- as.data.frame(c.scores)
   colnames(c.scores) <- paste0("C", 1:object@k)
 
-  finalScores <- sqrt(rowSums(c.scores[, 1:ncomponents]^2))
+  finalScores <- sqrt(rowSums(c.scores[, 1:ncomponents, drop = FALSE]^2))
   # alternate way
   # finalScores <- sqrt(rowSums((data %*% solve(cov2cor(covmat))) * data))
 
