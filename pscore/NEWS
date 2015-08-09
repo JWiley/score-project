@@ -1,3 +1,10 @@
+pscore 0.3.1
+------------------------------------------------------------
+
+BUG FIXES
+
+* fixed several bugs in mahalanobisComposite related to how the number of components used (previously it failed if only a single component was used, and the loadings graph was incorrect).
+
 pscore 0.3.0
 ------------------------------------------------------------
 

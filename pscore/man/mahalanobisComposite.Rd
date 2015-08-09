@@ -55,7 +55,7 @@ round(cprep@covmat,2)
 
 # now we can create the composite based on mahalanobis distances
 # from our defined thresholds
-mcomp <- mahalanobisComposite(cprep)
+mcomp <- mahalanobisComposite(cprep, 1)
 
 # view a histogram of the composite scores
 mcomp@scoreHistogram

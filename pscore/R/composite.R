@@ -290,10 +290,11 @@ mahalanobisComposite <- function(object, ncomponents, pca) {
   ltab <- Lbase
   colnames(ltab) <- paste0("C", 1:object@k)
   ltab[] <- format(round(ltab, 2), nsmall=2, digits=2)
+  ltab <- ltab[, 1:ncomponents, drop = FALSE]
 
   L <- as.data.frame(pca$loadings[, 1:ncomponents, drop = FALSE])
   colnames(L) <- paste0("Comp", 1:ncomponents)
-  L$Variable <- factor(rownames(L), levels = colnames(object@data)[1:ncomponents])
+  L$Variable <- factor(rownames(L), levels = colnames(object@data)[1:object@k])
   L <- melt(L, id.vars = "Variable")
 
   loadingsplot <- ggplot(L, aes(Variable, abs(value), fill = ifelse(value > 0, "positive", "negative"))) +
