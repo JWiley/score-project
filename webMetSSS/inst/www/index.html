@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Web Metabolic Syndrome Severity Score</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-theme.min.css" rel="stylesheet">
+    <style>
+      html {
+      position: relative;
+      min-height: 100%;
+      }
+      body {
+      /* Margin bottom by footer height */
+      margin-bottom: 100px;
+      }
+      .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      /* Set the fixed height of the footer here */
+      height: 100px;
+      background-color: #f5f5f5;
+      }
+    </style>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+  
+  <body>
+  <div class="container theme-showcase" role="main">
+    <h1>Metabolic Syndrome Severity Score Calculator</h1>
+
+    <div class="row">
+      <div class="col-sm-6">
+	<p>This webpage is designed to allow easy calculation of the
+	  Metabolic Syndrome Severity Score, using the formula derived from
+	  the Healthy Hearts Study.</p>
+	<p>This work is based on a manuscript currently under
+	  preparation: <em>A metabolic syndrome severity score: A tool to
+	    quantify cardiometabolic risk</em>.</p>
+
+	<p>Note that when using this calculator, it is important to
+	specify the sex (Female or Male) for each set of values.
+	Systolic and diastolic blood pressure (SBP and DBP) should be
+	in mm Hg.  Triglycerides (Trigs), high density lipoprotein
+	cholesterol (HDL), and blood glucose (glucose) should be in
+	mmol/L.  Waist circumference (waist) should be in
+	  centimeters.</p>
+
+	<p>This graph shows a histogram of the MetSSS score in a
+	community sample of adults in regional Australia from the
+	Healthy Hearts Study.  The dashed line shows the mean MetSSS.</p>
+	
+      </div>
+      
+      <div class="col-sm-6">
+	<img class="center-block img-rounded img-responsive"
+	     src="../score/HHMetSSS.png" style="width:100%;">
+      </div>
+      
+    </div>
+
+    <h2>Manual Entry Scoring</h2>
+
+    <form class="form-inline" role="form">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+		<th>SBP</th>
+		<th>DBP</th>
+		<th>Trigs</th>
+		<th>HDL</th>
+		<th>Waist</th>
+		<th>Glucose</th>
+		<th>Sex</th>
+		<th>MetSSS</th></tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+      <div class="text-center">
+        <button type="button" id="scorebutton" class="btn btn-primary btn-lg">Score MetSSS</button>
+      </div>
+    </form>
+
+    <h2>Batch Scoring</h2>
+ 
+    <p>If you wish to score many values quickly, you can upload a CSV
+    file with the values on each variable, and an updated CSV will be
+    created with the MetSSS added as an additional column.  The CSV
+    file should contain columns
+    for <code>sbp</code>,  <code>dbp</code>, 
+      <code>trigs</code>, <code>hdl</code>,
+      <code>waist</code>, <code>glucose</code>,
+    and <code>sex</code>.  Note that columns must be named exactly as
+    specified and are case sensitive.  Also sex must be labeled as
+    "Female" or "Male" and is case sensitive (i.e., "male" will not
+    work). If you would like to try this feature out,
+    you can download sample data 
+      (<a href="../score/testdata.csv">here</a>), and then upload it
+    to see how it is scored.</p>
+
+    <form role="form">
+      <div class="form-group">
+        <img src="spinner.gif" class="spinner" style="display:none;" />
+        <input class="btn btn-primary btn-lg" type="file" id="csvfile">
+        <br>
+        <a class="btn btn-success btn-lg hide" target="_blank" id="outputcsv">Output CSV</a>
+      </div>
+
+    </form>
+
+  </div>
+
+    <footer class="footer">
+      <div class="container">
+	</br>
+        <p class="text-muted text-center">Copyright 2015.  For help or questions,
+        contact joshua (dot) wiley (at) acu.edu.au</p>
+      </div>
+    </footer>
+  
+  <script src="jquery.min.js"></script>
+  <script src="bootstrap.min.js"></script>
+  <script src="opencpu.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>

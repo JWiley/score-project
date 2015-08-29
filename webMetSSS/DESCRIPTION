@@ -1,0 +1,17 @@
+Package: webMetSSS
+Title: Calculate MetSSS using the HH Formula
+Version: 0.1.0
+Date: 2015-09-01
+Author: Joshua F. Wiley <jwiley.psych@gmail.com>
+Maintainer: Joshua F. Wiley <jwiley.psych@gmail.com>
+Description: Provides a wrapper to use the pscore package
+  to calculate the MetSSS on new data using the
+  HH Formula.
+Depends:
+    R (>= 3.1.0)
+Imports:
+    stats,
+    pscore
+License: LGPL-3
+ByteCompile: true
+URL: https://jwiley.github.io/score-project/
