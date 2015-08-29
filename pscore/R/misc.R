@@ -147,6 +147,31 @@ winsorizor <- function(d, percentile, values, na.rm = TRUE) {
 }
 
 
+#' Drop unnecessary data from a MahalanobisComposite object.
+#'
+#' This function removes graphs and other sensitive data.
+#'
+#' @param object A MahalanobisComposite object
+#' @return A MahalanobisComposite object with some slots replaced with missing values
+#' @export
+#' @examples
+#' # make me!!!
+dropData <- function(object) {
+  object@scores <- NA_real_
+  object@scoreHistogram <- NA_real_
+  object@screePlot <- NA_real_
+  object@loadingGraph <- NA_real_
+  object@loadingTable <- matrix(NA_real_)
+  object@CompositeReady@data <- data.frame(NA_real_)
+  object@CompositeReady@distances <- data.frame(NA_real_)
+  object@CompositeReady@rawdata <- data.frame(NA_real_)
+  object@CompositeReady@groups <- ""
+  object@CompositeReady@distanceDensity <- list()
+  return(object)
+}
+
+
+
 #' @name BioDB
 #' @title Biomarker Thresholds Database
 #' @description This data set lists the clinical high risk thresholds for a variety of biomarkers

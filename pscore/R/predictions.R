@@ -13,7 +13,7 @@
 .preparePredict <- function(object, newdata, groups) {
   stopifnot(is.data.frame(newdata))
 
-  stopifnot(identical(ncol(newdata), ncol(object@CompositeReady@rawdata)))
+  stopifnot(identical(ncol(newdata), object@CompositeReady@k))
 
   ug <- unique(groups)
   thresholds <- object@CompositeReady@thresholds

@@ -8,7 +8,7 @@ Description: Provides a number of functions to
     simplify and automate the scoring, comparison, and evaluation of
     different ways of creating composites of data.  It is particularly
     aimed at facilitating the creation of physiological composites of
-    metabolic syndrome symptom score (MSSS) and allostatic load (AL).
+    metabolic syndrome symptom score (MetSSS) and allostatic load (AL).
 Depends:
     R (>= 3.1.0),
     methods
