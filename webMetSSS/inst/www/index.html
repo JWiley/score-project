@@ -7,6 +7,7 @@
     
     <title>Web Metabolic Syndrome Severity Score</title>
     <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="nv.d3.min.css" rel="stylesheet">    
     <!-- <link href="bootstrap-theme.min.css" rel="stylesheet"> -->
     <style>
       html {
@@ -24,6 +25,14 @@
       /* Set the fixed height of the footer here */
       height: 100px;
       background-color: #f5f5f5;
+      }
+
+      .rChart{
+      display: block;
+      margin-left: auto; 
+      margin-right: auto;
+      width: 450px;
+      height: 450px;
       }
     </style>
 
@@ -76,7 +85,7 @@
 	</div>
 	</div>
       </div>
-    
+      
     <div class="row">
       <div class="col-sm-6">
 	
@@ -103,8 +112,13 @@
       </div>
       
       <div class="col-sm-6">
-	<img class="center-block img-rounded img-responsive"
-	     src="../score/HHMetSSS.png" style="width:100%;">
+	      <div id = 'chart2c881c9341' class="rChart"></div>      
+	<!-- <img class="center-block img-rounded img-responsive" -->
+	<!--      src="../score/HHMetSSS.png" style="width:100%;"> -->
+	<!-- <img class="center-block img-rounded img-responsive" -->
+	<!--      src="../score/HHMetSSS.svg" -->
+	<!--      alt="Histogram of metabolic syndrome severity scores in the healthy hearts study." -->
+	<!--      style="width:100% \9;"> -->
       </div>
       
     </div>
@@ -203,6 +217,287 @@
   <script src="bootstrap.min.js"></script>
   <script src="opencpu.js"></script>
   <script src="app.js"></script>
+  <script src="d3.min.js"></script>
+  <script src="nv.d3.min.js"></script>
+
+    <script type='text/javascript'>
+ $(document).ready(function(){
+      drawchart2c881c9341()
+    });
+    function drawchart2c881c9341(){  
+      var opts = {
+ "dom": "chart2c881c9341",
+"width":    450,
+"height":    450,
+"x": "x",
+"y": "Freq",
+"group": "Gender",
+"type": "multiBarChart",
+"id": "chart2c881c9341" 
+},
+        data = [
+ {
+ "CatMetSSS": "[0,0.5]",
+"Gender": "Male",
+"Freq": 81,
+"x":           0.25 
+},
+{
+ "CatMetSSS": "(0.5,1]",
+"Gender": "Male",
+"Freq": 68,
+"x":           0.75 
+},
+{
+ "CatMetSSS": "(1,1.5]",
+"Gender": "Male",
+"Freq": 88,
+"x":           1.25 
+},
+{
+ "CatMetSSS": "(1.5,2]",
+"Gender": "Male",
+"Freq": 115,
+"x":           1.75 
+},
+{
+ "CatMetSSS": "(2,2.5]",
+"Gender": "Male",
+"Freq": 92,
+"x":           2.25 
+},
+{
+ "CatMetSSS": "(2.5,3]",
+"Gender": "Male",
+"Freq": 98,
+"x":           2.75 
+},
+{
+ "CatMetSSS": "(3,3.5]",
+"Gender": "Male",
+"Freq": 86,
+"x":           3.25 
+},
+{
+ "CatMetSSS": "(3.5,4]",
+"Gender": "Male",
+"Freq": 72,
+"x":           3.75 
+},
+{
+ "CatMetSSS": "(4,4.5]",
+"Gender": "Male",
+"Freq": 66,
+"x":           4.25 
+},
+{
+ "CatMetSSS": "(4.5,5]",
+"Gender": "Male",
+"Freq": 32,
+"x":           4.75 
+},
+{
+ "CatMetSSS": "(5,5.5]",
+"Gender": "Male",
+"Freq": 28,
+"x":           5.25 
+},
+{
+ "CatMetSSS": "(5.5,6]",
+"Gender": "Male",
+"Freq": 26,
+"x":           5.75 
+},
+{
+ "CatMetSSS": "(6,6.5]",
+"Gender": "Male",
+"Freq": 11,
+"x":           6.25 
+},
+{
+ "CatMetSSS": "(6.5,7]",
+"Gender": "Male",
+"Freq": 11,
+"x":           6.75 
+},
+{
+ "CatMetSSS": "(7,7.5]",
+"Gender": "Male",
+"Freq": 1,
+"x":           7.25 
+},
+{
+ "CatMetSSS": "(7.5,8]",
+"Gender": "Male",
+"Freq": 1,
+"x":           7.75 
+},
+{
+ "CatMetSSS": "(8,8.5]",
+"Gender": "Male",
+"Freq": 0,
+"x":           8.25 
+},
+{
+ "CatMetSSS": "(8.5,9]",
+"Gender": "Male",
+"Freq": 0,
+"x":           8.75 
+},
+{
+ "CatMetSSS": "[0,0.5]",
+"Gender": "Female",
+"Freq": 154,
+"x":           0.25 
+},
+{
+ "CatMetSSS": "(0.5,1]",
+"Gender": "Female",
+"Freq": 90,
+"x":           0.75 
+},
+{
+ "CatMetSSS": "(1,1.5]",
+"Gender": "Female",
+"Freq": 121,
+"x":           1.25 
+},
+{
+ "CatMetSSS": "(1.5,2]",
+"Gender": "Female",
+"Freq": 116,
+"x":           1.75 
+},
+{
+ "CatMetSSS": "(2,2.5]",
+"Gender": "Female",
+"Freq": 151,
+"x":           2.25 
+},
+{
+ "CatMetSSS": "(2.5,3]",
+"Gender": "Female",
+"Freq": 133,
+"x":           2.75 
+},
+{
+ "CatMetSSS": "(3,3.5]",
+"Gender": "Female",
+"Freq": 104,
+"x":           3.25 
+},
+{
+ "CatMetSSS": "(3.5,4]",
+"Gender": "Female",
+"Freq": 82,
+"x":           3.75 
+},
+{
+ "CatMetSSS": "(4,4.5]",
+"Gender": "Female",
+"Freq": 76,
+"x":           4.25 
+},
+{
+ "CatMetSSS": "(4.5,5]",
+"Gender": "Female",
+"Freq": 41,
+"x":           4.75 
+},
+{
+ "CatMetSSS": "(5,5.5]",
+"Gender": "Female",
+"Freq": 47,
+"x":           5.25 
+},
+{
+ "CatMetSSS": "(5.5,6]",
+"Gender": "Female",
+"Freq": 34,
+"x":           5.75 
+},
+{
+ "CatMetSSS": "(6,6.5]",
+"Gender": "Female",
+"Freq": 15,
+"x":           6.25 
+},
+{
+ "CatMetSSS": "(6.5,7]",
+"Gender": "Female",
+"Freq": 13,
+"x":           6.75 
+},
+{
+ "CatMetSSS": "(7,7.5]",
+"Gender": "Female",
+"Freq": 5,
+"x":           7.25 
+},
+{
+ "CatMetSSS": "(7.5,8]",
+"Gender": "Female",
+"Freq": 0,
+"x":           7.75 
+},
+{
+ "CatMetSSS": "(8,8.5]",
+"Gender": "Female",
+"Freq": 1,
+"x":           8.25 
+},
+{
+ "CatMetSSS": "(8.5,9]",
+"Gender": "Female",
+"Freq": 1,
+"x":           8.75 
+} 
+]
+  
+      if(!(opts.type==="pieChart" || opts.type==="sparklinePlus" || opts.type==="bulletChart")) {
+        var data = d3.nest()
+          .key(function(d){
+            //return opts.group === undefined ? 'main' : d[opts.group]
+            //instead of main would think a better default is opts.x
+            return opts.group === undefined ? opts.y : d[opts.group];
+          })
+          .entries(data);
+      }
+      
+      if (opts.disabled != undefined){
+        data.map(function(d, i){
+          d.disabled = opts.disabled[i]
+        })
+      }
+      
+      nv.addGraph(function() {
+        var chart = nv.models[opts.type]()
+          .width(opts.width)
+          .height(opts.height)
+          .stacked(true)
+          <!-- .showControls(false) -->
+          
+        if (opts.type != "bulletChart"){
+          chart
+            .x(function(d) { return d[opts.x] })
+            .y(function(d) { return d[opts.y] })
+        }
+
+      
+       d3.select("#" + opts.id)
+        .append('svg')
+        .datum(data)
+        .transition().duration(500)
+        .call(chart);
+
+       nv.utils.windowResize(chart.update);
+       return chart;
+      });
+    };
+</script>
+    
+
+  
 
 </body>
 </html>
