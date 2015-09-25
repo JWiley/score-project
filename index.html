@@ -11,36 +11,10 @@
 
     <title>Score-project by JWiley</title>
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-
-    <!-- jquery -->
-    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-theme.min.css" rel="stylesheet">    
+    <link href="nv.d3.min.css" rel="stylesheet">
     <style>
-      html {
-      position: relative;
-      min-height: 100%;
-      }
-      body {
-      /* Margin bottom by footer height */
-      margin-bottom: 100px;
-      }
-      .footer {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      /* Set the fixed height of the footer here */
-      height: 100px;
-      background-color: #f5f5f5;
-      }
-
       .rChart{
       display: block;
       margin-left: auto;
@@ -50,7 +24,9 @@
       }
     </style>
 
-    
+
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
     <script>
       $(function () {
       $('[data-toggle="tooltip"]').tooltip()
@@ -81,12 +57,10 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <!-- <li class="active"><a href="#">Home</a></li> -->
-            <li><a href="#composites" class="btn">Composites</a></li>
+            <li><a href="#mets" class="btn">MetS</a></li>
+            <li><a href="#al" class="btn">Allostatic Load</a></li>	    
             <li><a href="#methods" class="btn">Methods</a></li>
             <li><a href="#pubs" class="btn">Publications</a></li>
-	    <li><a href="http://52.27.31.208/ocpu/library/webMetSSS/www/" class="btn" target="_blank">
-		<span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>&nbsp; MetSSS Calculator
-	    </a></li>
 	    <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Software <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
@@ -113,184 +87,185 @@
 
       <p class="lead">The SCORE Project has a simple goal: help to standardize the creation and use of physiological composite risk endpoints.</p>
 
-      <p>As more research studies in the health and social sciences collect multiple
-	biomarkers, there is an increasing desire to
+      <p>As more research studies collect multiple biomarkers, there is an increasing need to
 	"reduce dimensionality" or otherwise summarize related biomarkers into composites,
 	often for use as endpoints, but also as predictors.
       </p>
       <p>The field of psychometrics has long dealt with how to use multiple
 	(potentially noisy) indicators of an underlying construct,
-	like health, or cardio-metabolic risk, or ..., but these techniques have
-	not been applied to biological data by enlarge.
+	like health, or cardio-metabolic risk, or ..., but these
+	techniques are not commonly applied to biological data.
 	Studies that do collect biomarkers and create composites often have
-	slightly different composites, because 
-	each study assesses a different set of biomarkers.  In psychometrics,
-	standard scales are developed and people tend to 
-	use these scales.  No such standardized equivalents exist for biomarkers.
+	slightly different composites, because 	each study assesses a
+	different set of biomarkers.  In psychometrics, standard
+	scales are developed and people tend to use these scales.  No
+	such standardized equivalents exist for biomarkers. 
       </p>
       <p>
 	The SCORE Project is all about changing this by
 	understanding how biomarkers relate and creating reliable, 
-	validated composites that can be used in research or clinical practice.
+	validated composites that can be used in research or clinical
+	practice.
       </p>
 
 
-      <h3><a id="composites" class="anchor" href="#composites"></a>Composites</h3>
+      <h2 id="mets">Metabolic Syndrome</h2>
+      
+	  <p>Metabolic syndrome represents a cluster of risk factors for
+	    cardiovascular disease and diabetes that frequently co-occur.
+	    Metabolic syndrome comprises:</p>
+	  <ul>
+	    <li>hypertension (high systolic or diastolic blood pressure)</li>
+	    <li>elevated triglycerides</li>
+	    <li>low high-density lipoprotein cholesterol</li>
+	    <li>hyperglycemia (elevated fasting glucose or glycosylated hemoglobin)</li>
+	    <li>central obesity (high body mass index or waist circumference)</li>
+	  </ul>
+	  
+	  <p>Metabolic syndrome is defined as the presence
+	    of at least 3/5 risk factors, according to guidelines from a joint scientific
+	    statement by the International Diabetes Federation Task Force on Epidemiology and Prevention;
+	    National Heart, Lung, and Blood Institute;
+	    American Heart Association;
+	    World Heart Federation;
+	    International Atherosclerosis Society;
+	    and International Association for the Study of Obesity
+	    (<a data-toggle="tooltip" title="Alberti, K. G. M. M., Eckel, R. H., Grundy, S. M., Zimmet, P. Z., Cleeman, J. I., Donato, K. A., . . . Smith, S. C. (2009). Harmonizing the Metabolic Syndrome: A Joint Interim Statement of the International Diabetes Federation Task Force on Epidemiology and Prevention; National Heart, Lung, and Blood Institute; American Heart Association; World Heart Federation; International Atherosclerosis Society; and International Association for the Study of Obesity. Circulation, 120(16), 1640-1645. doi: 10.1161/circulationaha.109.192644">Ref</a>).</p>
+	  <p>
+	    Clinical thresholds exist for each of the markers. Different units are provided, where appropriate,
+	    and alternate markers that are not in the guidelines, but may be used if no other data are available,
+	    along with approximately equivalent thresholds.
+	  </p>
 
-      <p>
-	Presently, the SCORE Project is focused on developing and validating approaches 
-	related to two composites, allostatic load and metabolic syndrome.
-      </p>
+	  <div class="table-responsive">
+	    <table class="table table-striped">
+	      <thead>
+		<tr>
+		  <th>&nbsp;</th>
+		  <th>Females</th>
+		  <th>Males</th>
+		</tr>
+	      </thead>
+	      <tbody>
+		<tr>
+		  <th>Waist circumference</th>
+		  <td>&ge; 80 cm (31 in) [~BMI &ge; 25]</td>
+		  <td>&ge; 94 cm (37 in) [~BMI &ge; 25]
+		  </td>
+		</tr>
+		<tr>
+		  <th>Triglycerides</th>
+		  <td>&ge; 1.7 mmol/L (150 mg/dL)</td>
+		  <td>&ge; 1.7 mmol/L (150 mg/dL)</td>
+		</tr>
+		<tr>
+		  <th>HDL Cholesterol</th>
+		  <td>&lt; 1.3 mmol/L (50 mg/dL)</td>
+		  <td>&lt; 1.0 mmol/L (40 mg/dL)</td>
+		</tr>
+		<tr>
+		  <th scope="row">Hypertension</th>
+		  <td>&ge; 130 mm Hg SBP and/or &ge; 85 mm Hg DBP</td>
+		  <td>&ge; 130 mm Hg SBP and/or &ge; 85 mm Hg DBP</td>
+		</tr>
+		<tr>
+		  <th>Fasting blood glucose</th>
+		  <td>&ge; 5.6 mmol/L (100 mg/dL) [~HbA1c &ge; 5.7]</td>
+		  <td>&ge; 5.6 mmol/L (100 mg/dL) [~HbA1c &ge; 5.7]</td>
+		</tr>
+	      </tbody>
+	    </table>
+	  </div>
+
+      <div class="row">      
+	<div class="col-sm-6">
+	  
+	  <p>In addition to the dichotomous presence or absence of the metabolic syndrome
+	    condition, a metabolic syndrome "severity" or "symptom" score can be created,
+	    by combining scores on individual biomarkers into a composite. Advantages of
+	    such a composite is that it: 1) contains more information than the simple
+	    metabolic syndrome present or absent dichotomy, and 2) is more sensitive to change,
+	    which may be particularly important as a risk endpoint in intervention or
+	    clinical trial research, and in clinical practice.  An individual may
+	    improve substantially, even though she or he still meets criteria for
+	    metabolic syndrome.
+	  </p>
+
+	  <p>The metabolic syndrome severity score (or MetSSS) can
+	    be easily calculated using the cloud-based web app
+	    below. This work is based on:</p>
+
+	  <blockquote>
+            <p>Wiley, J. F., &amp; Carrington, M. J. (in preparation).
+              A metabolic syndrome severity score: A tool to quantify cardio-metabolic risk.</p>
+	  </blockquote>
+
+	  
+	  <p>Note that when using this calculator, it is important to
+	    specify the sex (Female or Male) for each set of values.
+	    Systolic and diastolic blood pressure (SBP and DBP) should be
+	    in mm Hg.  Triglycerides (Trigs), high density lipoprotein
+	    cholesterol (HDL), and blood glucose (glucose) should be in
+	    mmol/L.  Waist circumference (waist) should be in
+	    centimeters.</p>
+
+	<p>This chart is a histogram of the MetSSS score in a community sample of
+	  adults in regional Australia from the Healthy Hearts
+	  Study.</p> 
+
+	</div>
+	<div class="col-sm-6">
+	  <div id = 'chart2c881c9341' class="rChart"></div>
+	  <!-- <img class="center-block img-rounded img-responsive" -->
+		    <!--      src="../score/HHMetSSS.png" style="width:100%;"> -->
+		    <!-- <img class="center-block img-rounded img-responsive" -->
+			      <!--      src="../score/HHMetSSS.svg" -->
+			      <!--      alt="Histogram of metabolic syndrome severity scores in the healthy hearts study." -->
+			      <!--      style="width:100% \9;"> -->
+	</div>
+	
+
+	<iframe src="http://52.27.31.208/ocpu/library/webMetSSS/www/"
+		style="bordern:none; width:100%; height:600px;">
+	</iframe>      
+
+      </div>
 
       
-      <div class="panel-group" id="accordion">
+      <div class="row">      
+	<h2 id="al">Allostatic Load</h2>
+	<p>Allostatic load theory posits that repeated activation of the stress response
+	  results in wear-and-tear on the body manifested through physiological dysregulation 
+	  across the entire organism.  Examples of a "normal" stress response, healthy adaptation,
+	  and then variants of non-optimal physiological stress responses are shown below.
+	</p>
+	
+	<figure>
+	  <img src="figs/stress.gif" alt="typical stress response" width="30%"></img>
+	  <img src="figs/adapt.gif" alt="typical stress response" width="30%"></img>
+	  <img src="figs/noadapt.gif" alt="typical stress response" width="30%"></img>	  
+	  <img src="figs/norecover.gif" alt="typical stress response" width="30%"></img>
+	  <img src="figs/noresponse.gif" alt="typical stress response" width="30%"></img>	  
+	  <figcaption>From left to right, typical single physiological stress response--- reaction and recovery,
+	    adaptive response - reactivity diminishes with repetition,
+	    non-adaptive response - reactivity persists with repetition,
+	    failure to recover - reactivity but no recovery,
+	    failure to react - no reactivity.</figcaption>
+	  
+      </div>
 
+
+      <div class="panel-group" id="accordion">
 	<div class="panel panel-default" id="panel1">
 	  <div class="panel-heading">
 	    <h4 class="panel-title">
-              <a data-toggle="collapse" data-target="#collapseOne" 
-		 href="#collapseOne" class="collapsed">
-		Metabolic Syndrome Symptom Score (MetSSS)
-              </a>
-	    </h4>
-	  </div>
-	  
-	  <div id="collapseOne" class="panel-collapse collapse">
-	    <div class="panel-body">
-	      <p>Metabolic syndrome represents a cluster of risk factors for
-		cardiovascular disease and diabetes that frequently co-occur.
-		Metabolic syndrome comprises:</p>
-	      <ul>
-		<li>hypertension (high systolic or diastolic blood pressure)</li>
-		<li>elevated triglycerides</li>
-		<li>low high-density lipoprotein cholesterol</li>
-		<li>hyperglycemia (elevated fasting glucose or glycosylated hemoglobin)</li>
-		<li>central obesity (high body mass index or waist circumference)</li>
-	      </ul>
-      
-	      <p>As a clinical condition, metabolic syndrome is defined as the presence
-		of at least 3/5 risk factors, according to guidelines from a joint scientific
-		statement by the International Diabetes Federation Task Force on Epidemiology and Prevention;
-		National Heart, Lung, and Blood Institute;
-		American Heart Association;
-		World Heart Federation;
-		International Atherosclerosis Society;
-		  and International Association for the Study of Obesity
-		(<a data-toggle="tooltip" title="Alberti, K. G. M. M., Eckel, R. H., Grundy, S. M., Zimmet, P. Z., Cleeman, J. I., Donato, K. A., . . . Smith, S. C. (2009). Harmonizing the Metabolic Syndrome: A Joint Interim Statement of the International Diabetes Federation Task Force on Epidemiology and Prevention; National Heart, Lung, and Blood Institute; American Heart Association; World Heart Federation; International Atherosclerosis Society; and International Association for the Study of Obesity. Circulation, 120(16), 1640-1645. doi: 10.1161/circulationaha.109.192644">Ref</a>).</p>
-	      <p>
-		Clinical thresholds exist for each of the markers. Different units are provided, where appropriate,
-		and alternate markers that are not in the guidelines, but may be used if no other data are available,
-		along with approximately equivalent thresholds.
-	      </p>
-
-	      <div class="table-responsive">
-		<table class="table table-striped">
-		  <thead>
-		    <tr>
-		      <th>&nbsp;</th>
-		      <th>Females</th>
-		      <th>Males</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-		      <th>Waist circumference</th>
-		      <td>&ge; 80 cm (31 in) [~BMI &ge; 25]</td>
-		      <td>&ge; 94 cm (37 in) [~BMI &ge; 25]
-		      </td>
-		    </tr>
-		    <tr>
-		      <th>Triglycerides</th>
-		      <td>&ge; 1.7 mmol/L (150 mg/dL)</td>
-		      <td>&ge; 1.7 mmol/L (150 mg/dL)</td>
-		    </tr>
-		    <tr>
-		      <th>HDL Cholesterol</th>
-		      <td>&lt; 1.3 mmol/L (50 mg/dL)</td>
-		      <td>&lt; 1.0 mmol/L (40 mg/dL)</td>
-		    </tr>
-		    <tr>
-		      <th scope="row">Hypertension</th>
-		      <td>&ge; 130 mm Hg SBP and/or &ge; 85 mm Hg DBP</td>
-		      <td>&ge; 130 mm Hg SBP and/or &ge; 85 mm Hg DBP</td>
-		    </tr>
-		    <tr>
-		      <th>Fasting blood glucose</th>
-		      <td>&ge; 5.6 mmol/L (100 mg/dL) [~HbA1c &ge; 5.7]</td>
-		      <td>&ge; 5.6 mmol/L (100 mg/dL) [~HbA1c &ge; 5.7]</td>
-		    </tr>
-		  </tbody>
-		</table>
-	      </div>
-
-	      <p>In addition to the dichotomous presence or absence of the metabolic syndrome
-		condition, a metabolic syndrome "severity" or "symptom" score can be created,
-		by combining scores on individual biomarkers into a composite. Advantages of
-		such a composite is that it: 1) contains more information than the simple
-		metabolic syndrome present or absent dichotomy, and 2) is more sensitive to change,
-		which may be particularly important as a risk endpoint in intervention or
-		clinical trial research, and in clinical practice.  An individual may
-		improve substantially, even though she or he still meets criteria for
-		metabolic syndrome.
-	      </p>
-
-	      <p>A cloud-based web app is available to automatically calculate an individuals' MetSSS
-		or to calculate the MetSSS for a whole data set.</p>
-	      <a href="http://52.27.31.208/ocpu/library/webMetSSS/www/" target="_blank">
-	      <button types="button" class = "btn btn-default" aria-label="Left Align">
-		<span class="glyphicon glyphicon-cloud"
-		      aria-hidden="true"></span>&nbsp;MetSSS Calculator
-	      </button>		
-	      </a>
-
-	      
-	    </div>
-	  </div>
-	</div>
-
-	
-	<div class="panel panel-default" id="panel2">	  
-	  <div class="panel-heading">
-	    <h4 class="panel-title">
-              <a data-toggle="collapse" data-target="#collapseTwo" href="#collapseTwo" class="collapsed">
-		Allostatic Load (AL)
-              </a>
-	    </h4>
-	  </div>
-	  
-	  <div id="collapseTwo" class="panel-collapse collapse">
-	    <div class="panel-body">
-	      <p>Allostatic load theory posits that repeated activation of the stress response
-		results in wear-and-tear on the body manifested through physiological dysregulation 
-		across the entire organism.  Examples of a "normal" stress response, healthy adaptation,
-		and then variants of non-optimal physiological stress responses are shown below.
-	      </p>
-	      
-	      <figure>
-		<img src="figs/stress.gif" alt="typical stress response" width="30%"></img>
-		<img src="figs/adapt.gif" alt="typical stress response" width="30%"></img>
-		<img src="figs/noadapt.gif" alt="typical stress response" width="30%"></img>	  
-		<img src="figs/norecover.gif" alt="typical stress response" width="30%"></img>
-		<img src="figs/noresponse.gif" alt="typical stress response" width="30%"></img>	  
-		<figcaption>From left to right, typical single physiological stress response--- reaction and recovery,
-		  adaptive response - reactivity diminishes with repetition,
-		  non-adaptive response - reactivity persists with repetition,
-		  failure to recover - reactivity but no recovery,
-		  failure to react - no reactivity.</figcaption>
-	    </div>
-	  </div>
-	</div>
-
-	<div class="panel panel-default" id="panel3">
-	  <div class="panel-heading">
-	    <h4 class="panel-title">
-              &nbsp;&nbsp;<a data-toggle="collapse" data-target="#collapseThree" href="#collapseThree" class="collapsed">
+              &nbsp;&nbsp;<a data-toggle="collapse" data-target="#collapseOne" href="#collapseOne" class="collapsed">
 		Example factor models for allostatic load
               </a>
 	    </h4>
 	  </div>
 	  
-	  <div id="collapseThree" class="panel-collapse collapse">
+	  <div id="collapseOne" class="panel-collapse collapse">
 	    <div class="panel-body">
 	      <object data="figs/al_sample_diagrams.svg" type="image/svg+xml" width="100%">
 		<img src="figs/al_sample_diagrams.svg" alt="Example factor structure diagrams" width="100%"></img>
@@ -299,17 +274,17 @@
 	  </div>
 	</div>
 	
-	<div class="panel panel-default" id="panel4">
+	<div class="panel panel-default" id="panel2">
 	  
 	  <div class="panel-heading">
 	    <h4 class="panel-title">
-              &nbsp;&nbsp;<a data-toggle="collapse" data-target="#collapseFour" href="#collapseFour" class="collapsed">
+              &nbsp;&nbsp;<a data-toggle="collapse" data-target="#collapseTwo" href="#collapseTwo" class="collapsed">
 		Sample fully specified factor models for allostatic load
               </a>
 	    </h4>
 	  </div>
 	  
-	  <div id="collapseFour" class="panel-collapse collapse">
+	  <div id="collapseTwo" class="panel-collapse collapse">
 	    <div class="panel-body">
 	      <object data="figs/biomarkers_full_diagrams.svg" type="image/svg+xml" width="100%" >
 		<img src="figs/biomarkers_full_diagrams.svg" alt="Full biomarker factor structure diagrams" width="100%"></img>
@@ -358,6 +333,13 @@
          <p>Wiley, J. F., Gruenewald, T., Karlamangla, A. &amp; Seeman, T. E. (under review).
          Modeling Multisystem Physiological Dysregulation.</p>
       </blockquote>
+
+      <blockquote>
+         <p>Wiley, J. F., &amp; Carrington, M. J. (in preparation).
+         A metabolic syndrome severity score: A tool to quantify cardio-metabolic risk.</p>
+      </blockquote>
+
+      
       <p>
 	Mplus input scripts to run the primary models from this paper, 
         as well as the Monte Carlo power simulation, and the 
@@ -413,5 +395,289 @@
 	</div>
       </footer>
 
+  <script src="opencpu.js"></script>
+  <script src="app.js"></script>
+  <script src="d3.min.js"></script>
+  <script src="nv.d3.min.js"></script>
+
+    <script type='text/javascript'>
+ $(document).ready(function(){
+      drawchart2c881c9341()
+    });
+    function drawchart2c881c9341(){
+      var opts = {
+ "dom": "chart2c881c9341",
+"width":    450,
+"height":    450,
+"x": "x",
+"y": "Freq",
+"group": "Gender",
+"type": "multiBarChart",
+"id": "chart2c881c9341"
+},
+        data = [
+ {
+ "CatMetSSS": "[0,0.5]",
+"Gender": "Male",
+"Freq": 81,
+"x":           0.25
+},
+{
+ "CatMetSSS": "(0.5,1]",
+"Gender": "Male",
+"Freq": 68,
+"x":           0.75
+},
+{
+ "CatMetSSS": "(1,1.5]",
+"Gender": "Male",
+"Freq": 88,
+"x":           1.25
+},
+{
+ "CatMetSSS": "(1.5,2]",
+"Gender": "Male",
+"Freq": 115,
+"x":           1.75
+},
+{
+ "CatMetSSS": "(2,2.5]",
+"Gender": "Male",
+"Freq": 92,
+"x":           2.25
+},
+{
+ "CatMetSSS": "(2.5,3]",
+"Gender": "Male",
+"Freq": 98,
+"x":           2.75
+},
+{
+ "CatMetSSS": "(3,3.5]",
+"Gender": "Male",
+"Freq": 86,
+"x":           3.25
+},
+{
+ "CatMetSSS": "(3.5,4]",
+"Gender": "Male",
+"Freq": 72,
+"x":           3.75
+},
+{
+ "CatMetSSS": "(4,4.5]",
+"Gender": "Male",
+"Freq": 66,
+"x":           4.25
+},
+{
+ "CatMetSSS": "(4.5,5]",
+"Gender": "Male",
+"Freq": 32,
+"x":           4.75
+},
+{
+ "CatMetSSS": "(5,5.5]",
+"Gender": "Male",
+"Freq": 28,
+"x":           5.25
+},
+{
+ "CatMetSSS": "(5.5,6]",
+"Gender": "Male",
+"Freq": 26,
+"x":           5.75
+},
+{
+ "CatMetSSS": "(6,6.5]",
+"Gender": "Male",
+"Freq": 11,
+"x":           6.25
+},
+{
+ "CatMetSSS": "(6.5,7]",
+"Gender": "Male",
+"Freq": 11,
+"x":           6.75
+},
+{
+ "CatMetSSS": "(7,7.5]",
+"Gender": "Male",
+"Freq": 1,
+"x":           7.25
+},
+{
+ "CatMetSSS": "(7.5,8]",
+"Gender": "Male",
+"Freq": 1,
+"x":           7.75
+},
+{
+ "CatMetSSS": "(8,8.5]",
+"Gender": "Male",
+"Freq": 0,
+"x":           8.25
+},
+{
+ "CatMetSSS": "(8.5,9]",
+"Gender": "Male",
+"Freq": 0,
+"x":           8.75
+},
+{
+ "CatMetSSS": "[0,0.5]",
+"Gender": "Female",
+"Freq": 154,
+"x":           0.25
+},
+{
+ "CatMetSSS": "(0.5,1]",
+"Gender": "Female",
+"Freq": 90,
+"x":           0.75
+},
+{
+ "CatMetSSS": "(1,1.5]",
+"Gender": "Female",
+"Freq": 121,
+"x":           1.25
+},
+{
+ "CatMetSSS": "(1.5,2]",
+"Gender": "Female",
+"Freq": 116,
+"x":           1.75
+},
+{
+ "CatMetSSS": "(2,2.5]",
+"Gender": "Female",
+"Freq": 151,
+"x":           2.25
+},
+{
+ "CatMetSSS": "(2.5,3]",
+"Gender": "Female",
+"Freq": 133,
+"x":           2.75
+},
+{
+ "CatMetSSS": "(3,3.5]",
+"Gender": "Female",
+"Freq": 104,
+"x":           3.25
+},
+{
+ "CatMetSSS": "(3.5,4]",
+"Gender": "Female",
+"Freq": 82,
+"x":           3.75
+},
+{
+ "CatMetSSS": "(4,4.5]",
+"Gender": "Female",
+"Freq": 76,
+"x":           4.25
+},
+{
+ "CatMetSSS": "(4.5,5]",
+"Gender": "Female",
+"Freq": 41,
+"x":           4.75
+},
+{
+ "CatMetSSS": "(5,5.5]",
+"Gender": "Female",
+"Freq": 47,
+"x":           5.25
+},
+{
+ "CatMetSSS": "(5.5,6]",
+"Gender": "Female",
+"Freq": 34,
+"x":           5.75
+},
+{
+ "CatMetSSS": "(6,6.5]",
+"Gender": "Female",
+"Freq": 15,
+"x":           6.25
+},
+{
+ "CatMetSSS": "(6.5,7]",
+"Gender": "Female",
+"Freq": 13,
+"x":           6.75
+},
+{
+ "CatMetSSS": "(7,7.5]",
+"Gender": "Female",
+"Freq": 5,
+"x":           7.25
+},
+{
+ "CatMetSSS": "(7.5,8]",
+"Gender": "Female",
+"Freq": 0,
+"x":           7.75
+},
+{
+ "CatMetSSS": "(8,8.5]",
+"Gender": "Female",
+"Freq": 1,
+"x":           8.25
+},
+{
+ "CatMetSSS": "(8.5,9]",
+"Gender": "Female",
+"Freq": 1,
+"x":           8.75
+}
+]
+
+      if(!(opts.type==="pieChart" || opts.type==="sparklinePlus" || opts.type==="bulletChart")) {
+        var data = d3.nest()
+          .key(function(d){
+            //return opts.group === undefined ? 'main' : d[opts.group]
+            //instead of main would think a better default is opts.x
+            return opts.group === undefined ? opts.y : d[opts.group];
+          })
+          .entries(data);
+      }
+
+      if (opts.disabled != undefined){
+        data.map(function(d, i){
+          d.disabled = opts.disabled[i]
+        })
+      }
+
+      nv.addGraph(function() {
+        var chart = nv.models[opts.type]()
+          .width(opts.width)
+          .height(opts.height)
+          .stacked(true)
+          <!-- .showControls(false) -->
+
+        if (opts.type != "bulletChart"){
+          chart
+            .x(function(d) { return d[opts.x] })
+            .y(function(d) { return d[opts.y] })
+        }
+
+
+       d3.select("#" + opts.id)
+        .append('svg')
+        .datum(data)
+        .transition().duration(500)
+        .call(chart);
+
+       nv.utils.windowResize(chart.update);
+       return chart;
+      });
+    };
+</script>
+
+
+
+      
   </body>
 </html>
