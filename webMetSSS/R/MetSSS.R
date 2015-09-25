@@ -36,9 +36,14 @@ MetSSS <- function(input) {
     newdata[, i] <- as.numeric(newdata[, i])
   }
 
-  #MetSSS_model is included with the package
-  newdata$metsss <- predictCS(MetSSS_model,
+  ##MetSSS_model is included with the package
+  metsss <- predictCS(MetSSS_model,
               newdata = newdata[, v],
-                              groups = as.character(newdata$sex))
+                      groups = as.character(newdata$sex))
+  if (!identical(length(metsss), nrow(newdata))) {
+    metsss <- metsss[1:nrow(newdata)]
+  }
+
+  newdata$metsss <- metsss
   return(newdata)
 }
