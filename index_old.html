@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Web Metabolic Syndrome Severity Score</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="nv.d3.min.css" rel="stylesheet">
+    <!-- <link href="bootstrap-theme.min.css" rel="stylesheet"> -->
+    <style>
+      html {
+      position: relative;
+      min-height: 100%;
+      }
+      body {
+      /* Margin bottom by footer height */
+      margin-bottom: 100px;
+      }
+      .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      /* Set the fixed height of the footer here */
+      height: 100px;
+      background-color: #f5f5f5;
+      }
+
+      .rChart{
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 450px;
+      height: 450px;
+      }
+    </style>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body>
+    <div class="container theme-showcase" role="main">
+      <div class="row">
+	<div class="col-md-10">
+	  <h1>Metabolic Syndrome Severity Score Calculator</h1>
+	</div>
+	<div class="col-md-2">
+	<!-- Button trigger modal -->
+	<h3>
+	<button type="button" class="label label-default" data-toggle="modal" data-target="#myModal">
+	  Disclaimer
+	</button>
+	</h3>
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h4 class="modal-title" id="myModalLabel">Disclaimer</h4>
+	      </div>
+	      <div class="modal-body">
+		<p>This site and its contents are made available as a research courtesy, with no direct or indirect liability accepted by Elkhart Group Limited (EGL), the study authors, or any of our affiliates, subsidiaries, employees, shareholders, or partners.  Analytics and comments presented are solely those of the analysts, experts, and study authors quoted based on current understanding of potentially incomplete data. They do not represent the opinions of EGL or her agents on specific intervention methodologies nor should they be used as a sole basis of medical treatment or other decision making actions on the part of Readers.
+		  The contents of this site, such as text, graphics, images, information obtained from studies and other sources, and other material contained on this Elkhart Group Limited site ("Content") are for informational purposes only. The Content is not intended to be a substitute for professional medical, financial or other analytic advice, diagnosis, treatment, or action. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Seek the advice of a qualified financial consultant for financial matters.  Never disregard professional medical advice or delay in seeking it because of something you have read on an EGL site!
+		  If you think you may have a medical emergency, call your doctor or an emergency number immediately. EGL does not recommend or endorse any specific tests, physicians, products, procedures, opinions, or other information that may be mentioned on the Site. Reliance on any information provided by EGL, EGL employees, others appearing on the Site at the invitation of EGL, or other visitors to the Site is solely at your own risk.</p>
+
+		<p>The Site may contain scientifically-relevant materials that are explicit and candid. If you find these materials offensive, you may not want to use our Site. </p>
+
+		<p>Readers should be cautious about any and all recommendations and should consider the source of any advice before taking or not taking any action. Various factors, including personal or corporate ownership, may influence or factor into an expert's analysis or opinion.  </p>
+
+		<p>All readers are advised to conduct their own independent research and consult with qualified experts before making any decision(s). In addition, readers are advised that past data performance is no guarantee of future results.</p>
+
+	      </div>
+	      <div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	</div>
+      </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+
+	<p>This webpage is designed to allow easy calculation of the
+	  Metabolic Syndrome Severity Score, using the formula derived from
+	  the Healthy Hearts Study.</p>
+
+	<p>This work is based on a manuscript currently under
+	  preparation: <em>A metabolic syndrome severity score: A tool to
+	    quantify cardiometabolic risk</em>.  For more details,
+	  see the main <a href = "http://score-project.org">SCORE Project homepage</a>.</p>
+
+	<p>Note that when using this calculator, it is important to
+	specify the sex (Female or Male) for each set of values.
+	Systolic and diastolic blood pressure (SBP and DBP) should be
+	in mm Hg.  Triglycerides (Trigs), high density lipoprotein
+	cholesterol (HDL), and blood glucose (glucose) should be in
+	mmol/L.  Waist circumference (waist) should be in
+	  centimeters.</p>
+
+	<p>This graph shows a histogram of the MetSSS score in a
+	community sample of adults in regional Australia from the
+	Healthy Hearts Study.</p>
+
+      </div>
+
+      <div class="col-sm-6">
+	      <div id = 'chart2c881c9341' class="rChart"></div>
+	<!-- <img class="center-block img-rounded img-responsive" -->
+	<!--      src="../score/HHMetSSS.png" style="width:100%;"> -->
+	<!-- <img class="center-block img-rounded img-responsive" -->
+	<!--      src="../score/HHMetSSS.svg" -->
+	<!--      alt="Histogram of metabolic syndrome severity scores in the healthy hearts study." -->
+	<!--      style="width:100% \9;"> -->
+      </div>
+
+    </div>
+
+    <h2>Manual Entry Scoring</h2>
+
+    <form class="form-inline" role="form">
+      <div class="table-responsive">
+	<table class="table table-hover">
+	  <caption style="caption-side:bottom;"><em>Note</em>.
+	    <strong>SBP</strong> = systolic blood pressure in mm Hg;
+	    <strong>DBP</strong> = diastolic blood pressure in mm Hg;
+	    <strong>TRIGS</strong> = triglycerides in mmol/L;
+	    <strong>HDL</strong> = high density lipoprotein cholesterol in mmol/L;
+	    <strong>WC</strong> = waist	circumference in centimeters;
+	    <strong>GLU</strong> = blood glucose in mmol/L;
+	    <strong>MetSSS</strong> = calculated metabolic syndrome severity score.
+	  </caption>
+        <thead>
+          <tr>
+      		<th>SBP</th>
+      		<th>DBP</th>
+      		<th>TRIGS</th>
+      		<th>HDL</th>
+      		<th>WC</th>
+      		<th>GLU</th>
+      		<th>Sex</th>
+      		<th>MetSSS</th>
+	  </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+      <!-- <table class="table table-hover"> -->
+      <!--   <thead> -->
+      <!--     <tr> -->
+      <!-- 		<th>Variable</th> -->
+      <!-- 		<th>Value</th> -->
+      <!--   </thead> -->
+      <!--   <tbody> -->
+      <!-- 	  <tr> <th>SBP</th>   <td> <div class="form-group"> <input type="number" min="0" max="300" class="form-control sbpfield" placeholder="SBP"> </div> </td> </tr> -->
+      <!-- 	  <tr> <th>SBP</th>   <td> <div class="form-group"> <input type="number" min="0" max="200" class="form-control dbpfield" placeholder="DBP"> </div> </td> </tr> -->
+      <!-- 	  <tr> <th>SBP</th>   <td> <div class="form-group"> <input type="number" min="0" max="100" class="form-control trigsfield" placeholder="Trigs"> </div> </td> </tr> -->
+      <!-- 	  <tr> <th>SBP</th>   <td> <div class="form-group"> <input type="number" min="0" max="100" class="form-control hdlfield" placeholder="HDL"> </div> </td> </tr> -->
+      <!-- 	  <tr> <th>SBP</th>   <td> <div class="form-group"> <input type="number" min="0" max="300" class="form-control waistfield" placeholder="waist"> </div> </td> </tr> -->
+      <!-- 	  <tr> <th>SBP</th>   <td> <div class="form-group"> <input type="number" min="0" max="100" class="form-control glucosefield" placeholder="glucose"> </div> </td> </tr> -->
+      <!-- 	  <tr> <th>SBP</th>   <td> <div class="form-group"> <select class="form-control sexfield"> <option>Female</option> <option>Male</option> </select> </div> </td> </tr> -->
+      <!-- 	  <tr> <th>SBP</th>   <td> <div class="form-group"> <input disabled="disabled" class="disabled form-control metsssfield"> </div> </td> </tr> -->
+
+      <!--   </tbody> -->
+      <!-- </table> -->
+
+
+      </div>
+      <div class="text-center">
+        <button type="button" id="scorebutton" class="btn btn-primary btn-lg">Score MetSSS</button>
+      </div>
+    </form>
+
+    <h2>Batch Scoring</h2>
+
+    <p>If you wish to score many values quickly, you can upload a CSV
+    file with the values on each variable, and an updated CSV will be
+    created with the MetSSS added as an additional column.  The CSV
+    file should contain columns
+    for <code>sbp</code>,  <code>dbp</code>,
+      <code>trigs</code>, <code>hdl</code>,
+      <code>waist</code>, <code>glucose</code>,
+    and <code>sex</code>.  Note that columns must be named exactly as
+    specified and are case sensitive.  Also sex must be labeled as
+    "Female" or "Male" and is case sensitive (i.e., "male" will not
+    work). If you would like to try this feature out,
+    you can download sample data
+      (<a href="../score/testdata.csv">here</a>), and then upload it
+    to see how it is scored.</p>
+
+    <form role="form">
+      <div class="form-group">
+        <img src="spinner.gif" class="spinner" style="display:none;" />
+        <input class="btn btn-primary btn-lg" type="file" id="csvfile">
+        </br>
+        <a class="btn btn-success btn-lg hide" target="_blank" id="outputcsv">Output CSV</a>
+      </div>
+
+    </form>
+
+    <div class="text-center">
+        <a href = "http://score-project.org"><button type="button" class="btn btn-default btn-lg">Back to the SCORE Project homepage</button></a>
+    </div>
+   </br>
+
+  </div>
+
+    <footer class="footer">
+      <div class="container">
+	</br>
+        <p class="text-muted text-center">Copyright 2015.  For help or questions,
+          contact joshua (dot) wiley (at) acu.edu.au</p>
+        <p class="text-muted text-center">Web App and server provided courtesy of <a href="http://elkhartgroup.com/">Elkhart Group Limited</a>.</p>
+
+    </footer>
+
+  <script src="jquery.min.js"></script>
+  <script src="bootstrap.min.js"></script>
+  <script src="opencpu.js"></script>
+  <script src="app.js"></script>
+  <script src="d3.min.js"></script>
+  <script src="nv.d3.min.js"></script>
+
+    <script type='text/javascript'>
+ $(document).ready(function(){
+      drawchart2c881c9341()
+    });
+    function drawchart2c881c9341(){
+      var opts = {
+ "dom": "chart2c881c9341",
+"width":    450,
+"height":    450,
+"x": "x",
+"y": "Freq",
+"group": "Gender",
+"type": "multiBarChart",
+"id": "chart2c881c9341"
+},
+        data = [
+ {
+ "CatMetSSS": "[0,0.5]",
+"Gender": "Male",
+"Freq": 81,
+"x":           0.25
+},
+{
+ "CatMetSSS": "(0.5,1]",
+"Gender": "Male",
+"Freq": 68,
+"x":           0.75
+},
+{
+ "CatMetSSS": "(1,1.5]",
+"Gender": "Male",
+"Freq": 88,
+"x":           1.25
+},
+{
+ "CatMetSSS": "(1.5,2]",
+"Gender": "Male",
+"Freq": 115,
+"x":           1.75
+},
+{
+ "CatMetSSS": "(2,2.5]",
+"Gender": "Male",
+"Freq": 92,
+"x":           2.25
+},
+{
+ "CatMetSSS": "(2.5,3]",
+"Gender": "Male",
+"Freq": 98,
+"x":           2.75
+},
+{
+ "CatMetSSS": "(3,3.5]",
+"Gender": "Male",
+"Freq": 86,
+"x":           3.25
+},
+{
+ "CatMetSSS": "(3.5,4]",
+"Gender": "Male",
+"Freq": 72,
+"x":           3.75
+},
+{
+ "CatMetSSS": "(4,4.5]",
+"Gender": "Male",
+"Freq": 66,
+"x":           4.25
+},
+{
+ "CatMetSSS": "(4.5,5]",
+"Gender": "Male",
+"Freq": 32,
+"x":           4.75
+},
+{
+ "CatMetSSS": "(5,5.5]",
+"Gender": "Male",
+"Freq": 28,
+"x":           5.25
+},
+{
+ "CatMetSSS": "(5.5,6]",
+"Gender": "Male",
+"Freq": 26,
+"x":           5.75
+},
+{
+ "CatMetSSS": "(6,6.5]",
+"Gender": "Male",
+"Freq": 11,
+"x":           6.25
+},
+{
+ "CatMetSSS": "(6.5,7]",
+"Gender": "Male",
+"Freq": 11,
+"x":           6.75
+},
+{
+ "CatMetSSS": "(7,7.5]",
+"Gender": "Male",
+"Freq": 1,
+"x":           7.25
+},
+{
+ "CatMetSSS": "(7.5,8]",
+"Gender": "Male",
+"Freq": 1,
+"x":           7.75
+},
+{
+ "CatMetSSS": "(8,8.5]",
+"Gender": "Male",
+"Freq": 0,
+"x":           8.25
+},
+{
+ "CatMetSSS": "(8.5,9]",
+"Gender": "Male",
+"Freq": 0,
+"x":           8.75
+},
+{
+ "CatMetSSS": "[0,0.5]",
+"Gender": "Female",
+"Freq": 154,
+"x":           0.25
+},
+{
+ "CatMetSSS": "(0.5,1]",
+"Gender": "Female",
+"Freq": 90,
+"x":           0.75
+},
+{
+ "CatMetSSS": "(1,1.5]",
+"Gender": "Female",
+"Freq": 121,
+"x":           1.25
+},
+{
+ "CatMetSSS": "(1.5,2]",
+"Gender": "Female",
+"Freq": 116,
+"x":           1.75
+},
+{
+ "CatMetSSS": "(2,2.5]",
+"Gender": "Female",
+"Freq": 151,
+"x":           2.25
+},
+{
+ "CatMetSSS": "(2.5,3]",
+"Gender": "Female",
+"Freq": 133,
+"x":           2.75
+},
+{
+ "CatMetSSS": "(3,3.5]",
+"Gender": "Female",
+"Freq": 104,
+"x":           3.25
+},
+{
+ "CatMetSSS": "(3.5,4]",
+"Gender": "Female",
+"Freq": 82,
+"x":           3.75
+},
+{
+ "CatMetSSS": "(4,4.5]",
+"Gender": "Female",
+"Freq": 76,
+"x":           4.25
+},
+{
+ "CatMetSSS": "(4.5,5]",
+"Gender": "Female",
+"Freq": 41,
+"x":           4.75
+},
+{
+ "CatMetSSS": "(5,5.5]",
+"Gender": "Female",
+"Freq": 47,
+"x":           5.25
+},
+{
+ "CatMetSSS": "(5.5,6]",
+"Gender": "Female",
+"Freq": 34,
+"x":           5.75
+},
+{
+ "CatMetSSS": "(6,6.5]",
+"Gender": "Female",
+"Freq": 15,
+"x":           6.25
+},
+{
+ "CatMetSSS": "(6.5,7]",
+"Gender": "Female",
+"Freq": 13,
+"x":           6.75
+},
+{
+ "CatMetSSS": "(7,7.5]",
+"Gender": "Female",
+"Freq": 5,
+"x":           7.25
+},
+{
+ "CatMetSSS": "(7.5,8]",
+"Gender": "Female",
+"Freq": 0,
+"x":           7.75
+},
+{
+ "CatMetSSS": "(8,8.5]",
+"Gender": "Female",
+"Freq": 1,
+"x":           8.25
+},
+{
+ "CatMetSSS": "(8.5,9]",
+"Gender": "Female",
+"Freq": 1,
+"x":           8.75
+}
+]
+
+      if(!(opts.type==="pieChart" || opts.type==="sparklinePlus" || opts.type==="bulletChart")) {
+        var data = d3.nest()
+          .key(function(d){
+            //return opts.group === undefined ? 'main' : d[opts.group]
+            //instead of main would think a better default is opts.x
+            return opts.group === undefined ? opts.y : d[opts.group];
+          })
+          .entries(data);
+      }
+
+      if (opts.disabled != undefined){
+        data.map(function(d, i){
+          d.disabled = opts.disabled[i]
+        })
+      }
+
+      nv.addGraph(function() {
+        var chart = nv.models[opts.type]()
+          .width(opts.width)
+          .height(opts.height)
+          .stacked(true)
+          <!-- .showControls(false) -->
+
+        if (opts.type != "bulletChart"){
+          chart
+            .x(function(d) { return d[opts.x] })
+            .y(function(d) { return d[opts.y] })
+        }
+
+
+       d3.select("#" + opts.id)
+        .append('svg')
+        .datum(data)
+        .transition().duration(500)
+        .call(chart);
+
+       nv.utils.windowResize(chart.update);
+       return chart;
+      });
+    };
+</script>
+
+
+
+
+</body>
+</html>
