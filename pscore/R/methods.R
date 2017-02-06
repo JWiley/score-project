@@ -91,8 +91,16 @@ CompositeData <- function(rawdata, groups, thresholds, higherisbetter, k, rawtra
     if (isTRUE(test)) object else test
 }
 
-#' An constructor function for the S4 DistanceScores class
+#' An constructor function for the S4 CompositeReady class
 #'
+#' @param data A data frame of the ready to use data
+#' @param covmat A covariance matrix of the data
+#' @param sigma A vector of the standard deviations of each variable
+#' @param standardize A logical whether the data were standardized or not
+#' @param use.prethreshold A logical value whether to calculate covariance matrix
+#'   based on the data after winsorizing, but before applying the threshold.
+#'   Defaults to \code{FALSE}, so that covariances are calculated after thresholds
+#'   (if any) are applied.
 #' @param distances A data frame of the distance scores
 #' @param distanceDensity A ggplot2 graph of the densities of each distance score.
 #'   If not passed, generated automatically from the data.
@@ -108,11 +116,37 @@ CompositeData <- function(rawdata, groups, thresholds, higherisbetter, k, rawtra
 #' @param higherisbetter an optional logical vector
 #' @param k an optional integer, the number of columns in the raw data
 #' @param rawtrans A list of functions to transform the raw data (and thresholds).
-#' @return An S4 object of class \dQuote{DistanceScores}
+#' @return An S4 object of class \dQuote{CompositeReady}
 #' @export
 #' @examples
 #' #make me!
-DistanceScores <- function(distances, distanceDensity, winsorizedValues, better, rawdata, groups, thresholds, higherisbetter, k, rawtrans) {
+CompositeReady <- function(data, covmat, sigma, standardize, use.prethreshold, distances, distanceDensity, winsorizedValues, better, rawdata, groups, thresholds, higherisbetter, k, rawtrans) {
+    stopifnot(is.data.frame(data))
+
+    if (missing(data)) {
+        stop("data must be specified")
+    }
+
+    if (nrow(data) < 1 || ncol(data) < 1) {
+        stop("data must have at least one row and column.")
+    }
+
+    if (missing(covmat)) {
+        covmat <- matrix(NA_real_)
+    }
+
+    if (missing(sigma)) {
+        sigma <- NA_real_
+    }
+
+    if (missing(standardize)) {
+        standardize <- NA
+    }
+
+    if (missing(use.prethreshold)) {
+      use.prethreshold <- NA
+    }
+
     stopifnot(is.data.frame(distances))
 
     if (missing(distances)) {
@@ -138,68 +172,18 @@ DistanceScores <- function(distances, distanceDensity, winsorizedValues, better,
         better <- rep(NA, ncol(distances))
     }
 
-    object <- new("DistanceScores",
-                  distances = distances,
-                  distanceDensity = distanceDensity,
-                  winsorizedValues = winsorizedValues,
-                  better = better,
-                  CompositeData(
-                      rawdata = rawdata,
-                      groups = groups,
-                      thresholds = thresholds,
-                      higherisbetter = higherisbetter,
-                      k = k,
-                      rawtrans = rawtrans)
-                  )
-
-    test <- validObject(object)
-    if (isTRUE(test)) object else test
-}
-
-#' An constructor function for the S4 CompositeReady class
-#'
-#' @param data A data frame of the ready to use data
-#' @param covmat A covariance matrix of the data
-#' @param sigma A vector of the standard deviations of each variable
-#' @param standardize A logical whether the data were standardized or not
-#' @inheritParams DistanceScores
-#' @return An S4 object of class \dQuote{CompositeReady}
-#' @export
-#' @examples
-#' #make me!
-CompositeReady <- function(data, covmat, sigma, standardize, distances, distanceDensity, winsorizedValues, better, rawdata, groups, thresholds, higherisbetter, k, rawtrans) {
-    stopifnot(is.data.frame(data))
-
-    if (missing(data)) {
-        stop("data must be specified")
-    }
-
-    if (nrow(data) < 1 || ncol(data) < 1) {
-        stop("data must have at least one row and column.")
-    }
-
-    if (missing(covmat)) {
-        covmat <- matrix(NA_real_)
-    }
-
-    if (missing(sigma)) {
-        sigma <- NA_real_
-    }
-
-    if (missing(standardize)) {
-        standardize <- NA
-    }
 
     object <- new("CompositeReady",
                   data = data,
                   covmat = covmat,
                   sigma = sigma,
                   standardize = standardize,
-                  DistanceScores(
-                    distances = distances,
-                    distanceDensity = distanceDensity,
-                    winsorizedValues = winsorizedValues,
-                    better = better,
+                  use.prethreshold = use.prethreshold,
+                  distances = distances,
+                  distanceDensity = distanceDensity,
+                  winsorizedValues = winsorizedValues,
+                  better = better,
+                  CompositeData(
                     rawdata = rawdata,
                     groups = groups,
                     thresholds = thresholds,

@@ -9,12 +9,11 @@ test_that("predictions using a sum score model on the same raw data, yield the s
                                                        qsec = min(qsec)))),
                                  higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
               ## create the distance scores
-              dres <- prepareDistances(d)
               ## prepare to create the composite
-              cprep <- prepareComposite(dres)
+              dres <- prepareComposite(d)
 
               ## create composite based on summing the (standardized)
-              scomp <- sumComposite(cprep, "square", "sum")
+              scomp <- sumComposite(dres, "square", "sum")
               ## use model to generate predictions on new data
               yhat <- predictCS(scomp,
                                 newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
@@ -22,7 +21,7 @@ test_that("predictions using a sum score model on the same raw data, yield the s
               expect_equivalent(yhat, scomp@scores[1])
 
               ## create composite based on summing the (standardized)
-              scomp <- sumComposite(cprep, "abs", "sum")
+              scomp <- sumComposite(dres, "abs", "sum")
               ## use model to generate predictions on new data
               yhat <- predictCS(scomp,
                                 newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
@@ -30,7 +29,7 @@ test_that("predictions using a sum score model on the same raw data, yield the s
               expect_equivalent(yhat, scomp@scores[1])
 
               ## create composite based on summing the (standardized)
-              scomp <- sumComposite(cprep, "none", "sum")
+              scomp <- sumComposite(dres, "none", "sum")
               ## use model to generate predictions on new data
               yhat <- predictCS(scomp,
                                 newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
@@ -38,7 +37,7 @@ test_that("predictions using a sum score model on the same raw data, yield the s
               expect_equivalent(yhat, scomp@scores[1])
 
               ## create composite based on summing the (standardized)
-              scomp <- sumComposite(cprep, "square", "mean")
+              scomp <- sumComposite(dres, "square", "mean")
               ## use model to generate predictions on new data
               yhat <- predictCS(scomp,
                                 newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
@@ -46,7 +45,7 @@ test_that("predictions using a sum score model on the same raw data, yield the s
               expect_equivalent(yhat, scomp@scores[1])
 
               ## create composite based on summing the (standardized)
-              scomp <- sumComposite(cprep, "square", "sum",
+              scomp <- sumComposite(dres, "square", "sum",
                                     systems = list(
                                         environment = c("mpg"),
                                         performance = c("hp", "qsec", "wt")))
@@ -58,7 +57,7 @@ test_that("predictions using a sum score model on the same raw data, yield the s
 
 
               ## create composite based on summing the (standardized)
-              scomp <- sumComposite(cprep, "none", "mean",
+              scomp <- sumComposite(dres, "none", "mean",
                                     systems = list(
                                         environment = c("mpg"),
                                         performance = c("hp", "qsec", "wt")))
@@ -83,12 +82,11 @@ test_that("predictions using a sum score model on the same raw data, yield the s
                                      qsec = sqrt))
 
               ## create the distance scores
-              dres <- prepareDistances(d)
               ## prepare to create the composite
-              cprep <- prepareComposite(dres)
+              dres <- prepareComposite(d)
 
               ## create composite based on summing the (standardized)
-              scomp2 <- sumComposite(cprep, "square", "sum")
+              scomp2 <- sumComposite(dres, "square", "sum")
               ## use model to generate predictions on new data
               yhat <- predictCS(scomp2,
                                 newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
@@ -108,12 +106,11 @@ test_that("predictions using a Mahalanobis Distance score model on the same raw 
                                                        qsec = min(qsec)))),
                                  higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
               ## create the distance scores
-              dres <- prepareDistances(d)
               ## prepare to create the composite
-              cprep <- prepareComposite(dres)
+              dres <- prepareComposite(d)
 
               ## create composite based on mahalanobis distance
-              mcomp <- mahalanobisComposite(cprep)
+              mcomp <- mahalanobisComposite(dres)
               ## use model to generate predictions on new data
               yhat <- predictCS(mcomp,
                                 newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
@@ -121,7 +118,7 @@ test_that("predictions using a Mahalanobis Distance score model on the same raw 
               expect_equivalent(yhat, mcomp@scores[1])
 
               ## create composite based on mahalanobis distance
-              mcomp <- mahalanobisComposite(cprep, 2)
+              mcomp <- mahalanobisComposite(dres, 2)
               ## use model to generate predictions on new data
               yhat <- predictCS(mcomp,
                                 newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
@@ -143,12 +140,11 @@ test_that("predictions using a Mahalanobis Distance score model on the same raw 
                                      qsec = sqrt))
 
               ## create the distance scores
-              dres <- prepareDistances(d)
               ## prepare to create the composite
-              cprep <- prepareComposite(dres)
+              dres <- prepareComposite(d)
 
               ## create composite based on mahalanobis distance
-              mcomp2 <- mahalanobisComposite(cprep, 2)
+              mcomp2 <- mahalanobisComposite(dres, 2)
               ## use model to generate predictions on new data
               yhat <- predictCS(mcomp2,
                                 newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
@@ -166,12 +162,11 @@ test_that("predictions using a Factor score model on the same raw data, yield th
                                                        qsec = min(qsec)))),
                                  higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
               ## create the distance scores
-              dres <- prepareDistances(d)
               ## prepare to create the composite
-              cprep <- prepareComposite(dres)
+              dres <- prepareComposite(d)
 
               ## create composite based on mahalanobis distance
-              fcomp <- factorComposite(cprep, type = "onefactor")
+              fcomp <- factorComposite(dres, type = "onefactor")
               ## use model to generate predictions on new data
               yhat <- predictCS(fcomp,
                                 newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
@@ -192,12 +187,11 @@ test_that("predictions using a Factor score model on the same raw data, yield th
                                      qsec = sqrt))
 
               ## create the distance scores
-              dres <- prepareDistances(d)
               ## prepare to create the composite
-              cprep <- prepareComposite(dres)
+              dres <- prepareComposite(d)
 
               ## create composite based on mahalanobis distance
-              fcomp2 <- factorComposite(cprep, type = "onefactor")
+              fcomp2 <- factorComposite(dres, type = "onefactor")
               ## use model to generate predictions on new data
               yhat <- predictCS(fcomp2,
                                 newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],

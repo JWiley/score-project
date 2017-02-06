@@ -26,12 +26,10 @@
                      k = object@CompositeReady@k,
                      rawtrans = object@CompositeReady@rawtrans)
 
-  dres <- prepareDistances(d,
-                           winsorize = object@CompositeReady@winsorizedValues$percentile,
-                           values = object@CompositeReady@winsorizedValues,
-                           better = object@CompositeReady@better)
-
-  prepareComposite(dres,
+  prepareComposite(d,
+                   winsorize = object@CompositeReady@winsorizedValues$percentile,
+                   values = object@CompositeReady@winsorizedValues,
+                   better = object@CompositeReady@better,
                    covmat = object@CompositeReady@covmat,
                    standardize = object@CompositeReady@standardize)
 }
@@ -57,25 +55,24 @@
 #'                                      qsec = min(qsec)))),
 #'                    higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 #' ## create the distance scores
-#' dres <- prepareDistances(d)
-#' ## prepare to create the composite
-#' cprep <- prepareComposite(dres)
+#' ## and prepare to create the composite
+#' dres <- prepareComposite(d)
 #'
 #' ## create composite based on summing the (standardized)
-#' scomp <- sumComposite(cprep, "square", "sum")
+#' scomp <- sumComposite(dres, "square", "sum")
 #' ## use model to generate predictions on new data
 #' predictCS(scomp,
 #'           newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
 #'           groups = "one")
 #'
 #' ## create composite based on mahalanobis distances
-#' mcomp <- mahalanobisComposite(cprep)
+#' mcomp <- mahalanobisComposite(dres)
 #' ## use model to generate predictions on new data
 #' predictCS(mcomp,
 #'           newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
 #'           groups = "one")
 #' ## create composite based on factor scores
-#' fcomp <- factorComposite(cprep, type = "onefactor")
+#' fcomp <- factorComposite(dres, type = "onefactor")
 #' ## use model to generate predictions on new data
 #' predictCS(fcomp,
 #'           newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],

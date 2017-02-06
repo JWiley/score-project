@@ -119,46 +119,42 @@ setClass("CompositeData",
 
 )
 
-#' An S4 class to represent distance scores
-#'
-#' @slot distances A data frame of the distance scores
-#' @slot distanceDensity A ggplot2 density graph
-#' @slot winsorizedValues A data frame of the values at which each variable was winsorized.
-#'   If percentile is 0, that means no winsorization, and values will simply be min and max.
-#' @slot better A logical value whether better scores than threshold were allowed
-#' @export
-setClass("DistanceScores",
-    slots = list(
-        distances = "data.frame",
-        distanceDensity = "ANY",
-        winsorizedValues = "data.frame",
-        better = "logical"),
-    prototype = list(
-        distances = data.frame(),
-        distanceDensity = NA,
-        winsorizedValues = data.frame(),
-        better = NA),
-    contains = "CompositeData")
-
 #' An S4 class to represent composite ready data
 #'
 #' @slot data A data frame ready for use to generate composite scores
 #' @slot covmat A covariance matrix
 #' @slot sigma The standard deviation of each variable
 #' @slot standardize A logical value whether standardization was applied
+#' @slot distances A data frame of the distance scores
+#' @slot distanceDensity A ggplot2 density graph
+#' @slot winsorizedValues A data frame of the values at which each variable was winsorized.
+#'   If percentile is 0, that means no winsorization, and values will simply be min and max.
+#' @slot better A logical value whether better scores than threshold were allowed
+#' @slot use.prethreshold A logical value whether covariance matrix was calculated from
+#'   pre threshold but post winsorizing data.
 #' @export
 setClass("CompositeReady",
-    slots = list(
-        data = "data.frame",
-        covmat = "matrix",
-        sigma = "numeric",
-        standardize = "logical"),
-    prototype = list(
-        data = data.frame(),
-        covmat = matrix(NA_real_),
-        sigma = NA_real_,
-        standardize = NA),
-    contains = "DistanceScores")
+         slots = list(
+           data = "data.frame",
+           covmat = "matrix",
+           sigma = "numeric",
+           standardize = "logical",
+           use.prethreshold = "logical",
+           distances = "data.frame",
+           distanceDensity = "ANY",
+           winsorizedValues = "data.frame",
+           better = "logical"),
+         prototype = list(
+           data = data.frame(),
+           covmat = matrix(NA_real_),
+           sigma = NA_real_,
+           standardize = NA,
+           use.prethreshold = NA,
+           distances = data.frame(),
+           distanceDensity = NA,
+           winsorizedValues = data.frame(),
+           better = NA),
+         contains = "CompositeData")
 
 #' An S4 class to represent composite scores based on Mahalanobis distance
 #'

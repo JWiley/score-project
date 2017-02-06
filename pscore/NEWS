@@ -1,3 +1,19 @@
+pscore 0.3.2
+------------------------------------------------------------
+
+NEW FEATURES
+
+* Minor update so that covariance matrices and
+  standard deviations can be calculated prior to thresholding,
+  if desired.
+
+CHANGES
+
+* winsorizor() has moved from pscore to JWileymisc and is then
+  imported from JWileymisc.  This was mvoed as winsorizor() is
+  relevant outside of pscore.
+
+
 pscore 0.3.1
 ------------------------------------------------------------
 

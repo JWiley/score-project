@@ -1,7 +1,7 @@
 Package: pscore
 Title: Standardizing Physiological Composite Risk Endpoints
-Version: 0.3.1
-Date: 2015-08-10
+Version: 0.3.2
+Date: 2017-02-06
 Author: Joshua F. Wiley <jwiley.psych@gmail.com>
 Maintainer: Joshua F. Wiley <jwiley.psych@gmail.com>
 Description: Provides a number of functions to
@@ -10,13 +10,14 @@ Description: Provides a number of functions to
     aimed at facilitating the creation of physiological composites of
     metabolic syndrome symptom score (MetSSS) and allostatic load (AL).
 Depends:
-    R (>= 3.1.0),
+    R (>= 3.2.0),
     methods
 Imports:
     stats,
     ggplot2,
     reshape2,
-    lavaan
+    lavaan,
+    JWileymisc
 Suggests:
     testthat
 License: LGPL-3
@@ -24,8 +25,9 @@ ByteCompile: true
 URL: https://jwiley.github.io/score-project/
 LazyData: true
 Collate:
-    'misc.R'
     'methods.R'
+    'misc.R'
     'classes.R'
     'composite.R'
     'predictions.R'
+RoxygenNote: 5.0.1
