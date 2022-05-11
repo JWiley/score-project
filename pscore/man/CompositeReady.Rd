@@ -4,9 +4,23 @@
 \alias{CompositeReady}
 \title{An constructor function for the S4 CompositeReady class}
 \usage{
-CompositeReady(data, covmat, sigma, standardize, use.prethreshold, distances,
-  distanceDensity, winsorizedValues, better, rawdata, groups, thresholds,
-  higherisbetter, k, rawtrans)
+CompositeReady(
+  data,
+  covmat,
+  sigma,
+  standardize,
+  use.prethreshold,
+  distances,
+  distanceDensity,
+  winsorizedValues,
+  better,
+  rawdata,
+  groups,
+  thresholds,
+  higherisbetter,
+  k,
+  rawtrans
+)
 }
 \arguments{
 \item{data}{A data frame of the ready to use data}
@@ -56,4 +70,3 @@ An constructor function for the S4 CompositeReady class
 \examples{
 #make me!
 }
-

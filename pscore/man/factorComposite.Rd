@@ -4,8 +4,11 @@
 \alias{factorComposite}
 \title{Score Data Using a Factor Model}
 \usage{
-factorComposite(object, type = c("onefactor", "secondorderfactor",
-  "bifactor"), factors = list(NA_character_))
+factorComposite(
+  object,
+  type = c("onefactor", "secondorderfactor", "bifactor"),
+  factors = list(NA_character_)
+)
 }
 \arguments{
 \item{object}{An object of class \code{CompositeReady}}
@@ -81,7 +84,8 @@ plot(fcomp@scores, fcomp2@scores)
 rm(d, dres, fcomp, fcomp2)
 }
 \seealso{
-Other composite: \code{\link{mahalanobisComposite}},
-  \code{\link{sumComposite}}
+Other composite: 
+\code{\link{mahalanobisComposite}()},
+\code{\link{sumComposite}()}
 }
-
+\concept{composite}

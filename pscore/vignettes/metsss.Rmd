@@ -1,0 +1,119 @@
+---
+title: "Metabolic Syndrom Severity Score (MetSSS)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{metsss-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>")
+
+```
+
+To start, load the package.
+
+```{r setup}
+
+library(pscore)
+
+```
+
+Metabolic syndrome represents a cluster of risk factors for
+cardiovascular disease and diabetes that frequently co-occur.
+Metabolic syndrome comprises:
+
+
+- hypertension (high systolic or diastolic blood pressure)
+- elevated triglycerides
+- low high-density lipoprotein cholesterol
+- hyperglycemia (elevated fasting glucose or glycosylated hemoglobin)
+- central obesity (high body mass index or waist circumference)
+	  
+Metabolic syndrome is defined as the presence
+of at least 3/5 risk factors, according to guidelines from a joint scientific
+statement by the International Diabetes Federation Task Force on Epidemiology and Prevention;
+National Heart, Lung, and Blood Institute; American Heart Association;
+World Heart Federation; International Atherosclerosis Society;
+and International Association for the Study of Obesity:
+
+> Alberti, K. G. M. M., Eckel, R. H., Grundy, S. M., Zimmet, P. Z., Cleeman, J. I., 
+> Donato, K. A., . . . Smith, S. C. (2009). Harmonizing the Metabolic Syndrome: 
+> A Joint Interim Statement of the International Diabetes Federation Task Force 
+> on Epidemiology and Prevention; National Heart, Lung, and Blood Institute; 
+> American Heart Association; World Heart Federation; International Atherosclerosis 
+> Society; and International Association for the Study of Obesity. 
+> Circulation, 120(16), 1640-1645. doi: 10.1161/circulationaha.109.192644
+
+Clinical thresholds exist for each of the markers. Different units are provided, where appropriate,
+and alternate markers that are not in the guidelines, but may be used if no other data are available,
+along with approximately equivalent thresholds.
+
+|                       | Females                                  | Males                                    |
+|-----------------------|------------------------------------------|------------------------------------------|
+| Waist circumference   | >= 80 cm (31 in) [~BMI >= 25]            | >= 94 cm (37 in) [~BMI >= 25]            |
+| Triglycerides         | >= 1.7 mmol/L (150 mg/dL)                | >= 1.7 mmol/L (150 mg/dL)                |
+| HDL Cholesterol       | < 1.3 mmol/L (50 mg/dL)                  | < 1.0 mmol/L (40 mg/dL)                  |
+| Hypertension          | >= 130 mm Hg SBP and/or >= 85 mm Hg DBP  | >= 130 mm Hg SBP and/or >= 85 mm Hg DBP  |
+| Fasting blood glucose | >= 5.6 mmol/L (100 mg/dL [~HbA1c >= 5.7] | >= 5.6 mmol/L (100 mg/dL [~HbA1c >= 5.7] |
+
+
+In addition to the dichotomous presence or absence of the metabolic syndrome condition, 
+a metabolic syndrome "severity" or "symptom" score can be created, by combining scores on 
+individual biomarkers into a composite. Advantages of such a composite is that it: 
+
+1. it contains more information than the simple metabolic syndrome present or absent 
+   dichotomy.
+2. it is more sensitive to change, which may be particularly important as a risk endpoint 
+   in intervention or clinical trial research, and in clinical practice. An individual 
+   may improve substantially, even though she or he still meets criteria for metabolic 
+   syndrome.
+
+The metabolic syndrome severity score (or MetSSS) can be calculated using the 
+`pscore` package in `R`. This work is based on:
+
+Wiley, J. F. & Carrington, M. J. (2016). A metabolic syndrome severity
+score: A tool to quantify cardio-metabolic risk factors. 
+_Preventive Medicine_. 
+
+Note that when using this calculator, it is important to specify the following variables.
+In specifying them, the spelling and capitalization of variable names must be exact as 
+must be the values for `sex`.
+
+- `sex`: `Female` or `Male` for each set of values, stored as character strings / text. 
+- `sbp`: systolic blood pressure in mm Hg
+- `dbp`: diastolic blood pressure in mm Hg
+- `trigs`: triglycerides in mmol/L
+- `hdl`: high density lipoprotein cholesterol in mmol/L
+- `glucose`: blood glucose in mmol/L
+- `waist`: waist circumference in centimeters
+
+Here is the code to actually calculate the MetSSS and I have attached the sample data file and scored file for reference so you know what they should look like. The variable names must match the sample datasheet exactly, including case. Note that when using this calculator, it is important to specify the sex (Female or Male) for each set of values (these need to be written exactly as "Female" and "Male" for each participant). Systolic and diastolic blood pressure (sbp and dbp) should be in mm Hg.  Triglycerides (trigs), high density lipoprotein cholesterol (hdl), and blood glucose (glucose) should be in mmol/L. Waist circumference (waist) should be in centimeters. The ID can be numeric (e.g., 1, 2, 3) or character (e.g., "A435").
+
+Note text after ## is a comment in R, so is there to help explain the code. The key lines of code to actually run are highlighted.
+
+```{r, eval = FALSE}
+## install devtools package, to get other packages from GitHub
+install.packages("devtools")
+
+## this is the workhorse with the functions to do the calculations
+devtools::install_github("JWiley/score-project/pscore")
+``` 
+
+```{r, eval = FALSE}
+## load data
+d <- read.csv("sample_metsss.csv")
+
+## only if having trouble, can check the STRucture of the data, which should be similar:
+str(d)
+
+## use the MetSSS calculator to score the data
+dscored <- MetSSS(d)
+
+## save the scored data back to another CSV file
+write.csv(dscored, file = "scored_metsss.csv", row.names = FALSE)
+```

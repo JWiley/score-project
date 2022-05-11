@@ -4,11 +4,12 @@
 \name{BioDB}
 \alias{BioDB}
 \title{Biomarker Thresholds Database}
-\format{a \code{list}.}
+\format{
+a \code{list}.
+}
 \source{
 Various publications
 }
 \description{
 This data set lists the clinical high risk thresholds for a variety of biomarkers
 }
-

@@ -2,9 +2,9 @@
 % Please edit documentation in R/classes.R
 \docType{class}
 \name{MahalanobisScores-class}
-\alias{FactorScores-class}
 \alias{MahalanobisScores-class}
 \alias{SumScores-class}
+\alias{FactorScores-class}
 \title{An S4 class to represent composite scores based on Mahalanobis distance}
 \description{
 An S4 class to represent composite scores based on Mahalanobis distance

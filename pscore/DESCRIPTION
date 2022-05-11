@@ -1,33 +1,48 @@
 Package: pscore
 Title: Standardizing Physiological Composite Risk Endpoints
-Version: 0.3.2
-Date: 2017-02-06
-Author: Joshua F. Wiley <jwiley.psych@gmail.com>
-Maintainer: Joshua F. Wiley <jwiley.psych@gmail.com>
+Version: 0.4.0
+Authors@R: 
+    person(given = "Joshua F.",
+           family = "Wiley",
+           role = c("aut", "cre"),
+           email = "jwiley.psych@gmail.com",
+           comment = c(ORCID = "0000-0002-0271-6702"))	   
 Description: Provides a number of functions to
-    simplify and automate the scoring, comparison, and evaluation of
-    different ways of creating composites of data.  It is particularly
-    aimed at facilitating the creation of physiological composites of
-    metabolic syndrome symptom score (MetSSS) and allostatic load (AL).
+  simplify and automate the scoring, comparison, and evaluation of
+  different ways of creating composites of data.  It is particularly
+  aimed at facilitating the creation of physiological composites of
+  metabolic syndrome symptom score (MetSSS) and allostatic load (AL).
+  Provides a wrapper to calculate the MetSSS on new data using the
+  Healthy Hearts formula. 
 Depends:
-    R (>= 3.2.0),
+    R (>= 4.0.0),
     methods
 Imports:
     stats,
     ggplot2,
     reshape2,
     lavaan,
-    JWileymisc
+    JWileymisc (>= 1.3.0)
 Suggests:
-    testthat
+    testthat,
+    covr,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
 License: LGPL-3
+Encoding: UTF-8
 ByteCompile: true
-URL: https://jwiley.github.io/score-project/
-LazyData: true
+URL: https://joshuawiley.com/score-project/,
+    https://github.com/JWiley/score-project
+BugReports: https://github.com/JWiley/score-project/issues
+LazyData: false
 Collate:
+    'MetSSS.R'
+    'MetSSS_model.R'
     'methods.R'
     'misc.R'
     'classes.R'
     'composite.R'
+    'onLoad.R'
     'predictions.R'
-RoxygenNote: 5.0.1
+RoxygenNote: 7.1.2

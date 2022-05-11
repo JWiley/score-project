@@ -34,4 +34,3 @@ pscore:::ldensity(mtcars, TRUE)
 # simple coloured plot
 pscore:::ldensity(mtcars, x = "mpg", g = "cyl")
 }
-

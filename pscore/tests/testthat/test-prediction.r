@@ -1,5 +1,3 @@
-context("predictions")
-
 test_that("predictions using a sum score model on the same raw data, yield the same scores", {
               d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
                                  thresholds = list(one = with(mtcars, c(
@@ -154,12 +152,12 @@ test_that("predictions using a Mahalanobis Distance score model on the same raw 
 })
 
 test_that("predictions using a Factor score model on the same raw data, yield the same scores", {
-              d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
+              d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "disp")],
                                  thresholds = list(one = with(mtcars, c(
                                                        mpg = max(mpg),
                                                        hp = max(hp),
                                                        wt = min(wt),
-                                                       qsec = min(qsec)))),
+                                                       disp = min(disp)))),
                                  higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
               ## create the distance scores
               ## prepare to create the composite
@@ -169,16 +167,16 @@ test_that("predictions using a Factor score model on the same raw data, yield th
               fcomp <- factorComposite(dres, type = "onefactor")
               ## use model to generate predictions on new data
               yhat <- predictCS(fcomp,
-                                newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
-                                groups = "one")
-              expect_equivalent(yhat$Composite, fcomp@scores[1])
+                                newdata = mtcars[1:5, c("mpg", "hp", "wt", "disp")],
+                                groups = rep("one", 5))
+              expect_equivalent(yhat$Composite, fcomp@scores[1:5])
 
-              d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
+              d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "disp")],
                                  thresholds = list(one = with(mtcars, c(
                                                        mpg = max(mpg),
                                                        hp = max(hp),
                                                        wt = min(wt),
-                                                       qsec = min(qsec)))),
+                                                       disp = min(disp)))),
                                  higherisbetter = c(TRUE, TRUE, FALSE, FALSE),
                                  rawtrans = list(
                                      mpg = function(x) x^4, # extreme on purpose
@@ -194,8 +192,8 @@ test_that("predictions using a Factor score model on the same raw data, yield th
               fcomp2 <- factorComposite(dres, type = "onefactor")
               ## use model to generate predictions on new data
               yhat <- predictCS(fcomp2,
-                                newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
-                                groups = "one")
-              expect_equivalent(yhat$Composite, fcomp2@scores[1])
+                                newdata = mtcars[1:5, c("mpg", "hp", "wt", "disp")],
+                                groups = rep("one", 5))
+              expect_equivalent(yhat$Composite, fcomp2@scores[1:5])
 
 })

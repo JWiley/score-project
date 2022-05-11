@@ -1,3 +1,14 @@
+pscore 0.4.0
+------------------------------------------------------------
+
+Updates to meet CRAN requirements.
+
+pscore 0.3.3
+------------------------------------------------------------
+
+BUG FIXES
+* Fixed issue with exporting methods.
+
 pscore 0.3.2
 ------------------------------------------------------------
 
@@ -10,7 +21,7 @@ NEW FEATURES
 CHANGES
 
 * winsorizor() has moved from pscore to JWileymisc and is then
-  imported from JWileymisc.  This was mvoed as winsorizor() is
+  imported from JWileymisc.  This was moved as winsorizor() is
   relevant outside of pscore.
 
 

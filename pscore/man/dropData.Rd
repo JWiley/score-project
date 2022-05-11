@@ -18,4 +18,3 @@ This function removes graphs and other sensitive data.
 \examples{
 # make me!!!
 }
-

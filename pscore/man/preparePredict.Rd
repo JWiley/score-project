@@ -24,4 +24,3 @@ An object of S4 class \dQuote{CompositeReady}
 \description{
 Internal function to prepare data for prediction
 }
-

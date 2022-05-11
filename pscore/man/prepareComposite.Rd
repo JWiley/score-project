@@ -4,8 +4,15 @@
 \alias{prepareComposite}
 \title{Prepare distance scores on data in preparation for composite scoring}
 \usage{
-prepareComposite(object, winsorize = 0, values, better = TRUE, covmat,
-  standardize = TRUE, use.prethreshold = FALSE)
+prepareComposite(
+  object,
+  winsorize = 0,
+  values,
+  better = TRUE,
+  covmat,
+  standardize = TRUE,
+  use.prethreshold = FALSE
+)
 }
 \arguments{
 \item{object}{An object of class \sQuote{CompositeData}.}
@@ -73,4 +80,4 @@ round(dres@covmat,2)
 rm(d, dres)
 
 }
-
+\concept{prepare}

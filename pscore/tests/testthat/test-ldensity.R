@@ -1,5 +1,3 @@
-context("ldensity")
-
 test_that("ldensity produces a ggplot2 graph for all permutations of options", {
               expect_is(pscore:::ldensity(mtcars, TRUE), "gg")
               expect_is(pscore:::ldensity(mtcars, TRUE, g= "cyl"), "gg")

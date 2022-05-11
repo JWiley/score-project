@@ -58,4 +58,3 @@ d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
 ## cleanup
 rm(d)
 }
-

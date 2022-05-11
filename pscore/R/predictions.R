@@ -47,12 +47,12 @@
 #' @return An object of S4 class \dQuote{CompositeReady}
 #' @export
 #' @examples
-#' d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "qsec")],
+#' d <- CompositeData(mtcars[, c("mpg", "hp", "wt", "disp")],
 #'                    thresholds = list(one = with(mtcars, c(
 #'                                      mpg = max(mpg),
 #'                                      hp = max(hp),
 #'                                      wt = min(wt),
-#'                                      qsec = min(qsec)))),
+#'                                      disp = min(disp)))),
 #'                    higherisbetter = c(TRUE, TRUE, FALSE, FALSE))
 #' ## create the distance scores
 #' ## and prepare to create the composite
@@ -71,12 +71,13 @@
 #' predictCS(mcomp,
 #'           newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
 #'           groups = "one")
+#' ## note in this too simple example, there are negative variance estimates
 #' ## create composite based on factor scores
 #' fcomp <- factorComposite(dres, type = "onefactor")
 #' ## use model to generate predictions on new data
 #' predictCS(fcomp,
-#'           newdata = mtcars[1, c("mpg", "hp", "wt", "qsec")],
-#'           groups = "one")
+#'           newdata = mtcars[1:5, c("mpg", "hp", "wt", "disp")],
+#'           groups = rep("one", 5))
 predictCS <- function(object, newdata, groups) {
 
   cprep <- .preparePredict(object, newdata, groups)

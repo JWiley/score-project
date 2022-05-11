@@ -2,6 +2,8 @@
 
 export(CompositeData)
 export(CompositeReady)
+export(MetSSS)
+export(MetSSS_model)
 export(dropData)
 export(factorComposite)
 export(mahalanobisComposite)
@@ -20,3 +22,4 @@ import(reshape2)
 importFrom(JWileymisc,winsorizor)
 importFrom(stats,cov)
 importFrom(stats,princomp)
+importFrom(utils,read.csv)

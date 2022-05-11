@@ -4,8 +4,12 @@
 \alias{sumComposite}
 \title{Score Data Using a simple sum}
 \usage{
-sumComposite(object, transform = c("square", "abs", "none"), type = c("sum",
-  "mean"), systems)
+sumComposite(
+  object,
+  transform = c("square", "abs", "none"),
+  type = c("sum", "mean"),
+  systems
+)
 }
 \arguments{
 \item{object}{An object of class \code{CompositeReady}}
@@ -97,7 +101,8 @@ plot(data.frame(S1 = scomp@scores, S2 = scomp2@scores, S3 = scomp3@scores))
 rm(d, dres, scomp, scomp2, scomp3)
 }
 \seealso{
-Other composite: \code{\link{factorComposite}},
-  \code{\link{mahalanobisComposite}}
+Other composite: 
+\code{\link{factorComposite}()},
+\code{\link{mahalanobisComposite}()}
 }
-
+\concept{composite}

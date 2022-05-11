@@ -86,7 +86,8 @@ plot(mcomp@scores, mcomp2@scores)
 rm(d, dres, mcomp, mcomp2)
 }
 \seealso{
-Other composite: \code{\link{factorComposite}},
-  \code{\link{sumComposite}}
+Other composite: 
+\code{\link{factorComposite}()},
+\code{\link{sumComposite}()}
 }
-
+\concept{composite}
