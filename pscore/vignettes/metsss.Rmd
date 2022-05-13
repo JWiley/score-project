@@ -15,18 +15,32 @@ knitr::opts_chunk$set(
 
 ```
 
-To start, load the package.
+The first step is we need to install the `pscore` package.
+The easiest way to do this is to install it from CRAN using the code below.
+
+
+> Note text after ## is a comment in R, so is there to help explain the code.
+> The key lines of code to actually run are highlighted.
+
+```{r, eval = FALSE}
+## install the pscore package
+install.packages("pscore")
+``` 
+
+Now we need to start or load the package.
+This is a bit like installing an app on your phone.
+You need to install it first, but when you want to use it, you need to 
+tap it to start it. In `R` we "start" a particular app or package
+by using the `library()` function and the name of the package 
+as in the code below.
 
 ```{r setup}
-
 library(pscore)
-
 ```
 
 Metabolic syndrome represents a cluster of risk factors for
 cardiovascular disease and diabetes that frequently co-occur.
 Metabolic syndrome comprises:
-
 
 - hypertension (high systolic or diastolic blood pressure)
 - elevated triglycerides
@@ -76,44 +90,96 @@ individual biomarkers into a composite. Advantages of such a composite is that i
 The metabolic syndrome severity score (or MetSSS) can be calculated using the 
 `pscore` package in `R`. This work is based on:
 
-Wiley, J. F. & Carrington, M. J. (2016). A metabolic syndrome severity
-score: A tool to quantify cardio-metabolic risk factors. 
-_Preventive Medicine_. 
+> Wiley, J. F. & Carrington, M. J. (2016). A metabolic syndrome severity
+> score: A tool to quantify cardio-metabolic risk factors. 
+> _Preventive Medicine, 88_, 189-195. https://doi.org/10.1016/j.ypmed.2016.04.006.
 
 Note that when using this calculator, it is important to specify the following variables.
 In specifying them, the spelling and capitalization of variable names must be exact as 
 must be the values for `sex`.
 
-- `sex`: `Female` or `Male` for each set of values, stored as character strings / text. 
+- `sex`: `Female` or `Male` for each set of values, stored as character strings or text. Capitalization matters.
 - `sbp`: systolic blood pressure in mm Hg
 - `dbp`: diastolic blood pressure in mm Hg
-- `trigs`: triglycerides in mmol/L
-- `hdl`: high density lipoprotein cholesterol in mmol/L
-- `glucose`: blood glucose in mmol/L
-- `waist`: waist circumference in centimeters
+- `trigs`: triglycerides **in mmol/L**
+- `hdl`: high density lipoprotein cholesterol **in mmol/L**
+- `glucose`: blood glucose **in mmol/L**
+- `waist`: waist circumference **in centimeters**
 
-Here is the code to actually calculate the MetSSS and I have attached the sample data file and scored file for reference so you know what they should look like. The variable names must match the sample datasheet exactly, including case. Note that when using this calculator, it is important to specify the sex (Female or Male) for each set of values (these need to be written exactly as "Female" and "Male" for each participant). Systolic and diastolic blood pressure (sbp and dbp) should be in mm Hg.  Triglycerides (trigs), high density lipoprotein cholesterol (hdl), and blood glucose (glucose) should be in mmol/L. Waist circumference (waist) should be in centimeters. The ID can be numeric (e.g., 1, 2, 3) or character (e.g., "A435").
+Build into the `pscore` package is a sample data file formatted exactly
+how the data needs to be formatted to score it. The data are stored 
+as a CSV file. You can find the location on your computer where 
+the sample dataset is stored using this code:
 
-Note text after ## is a comment in R, so is there to help explain the code. The key lines of code to actually run are highlighted.
+```{r}
+system.file("extdata", "sample_metsss.csv", package = "pscore")
+```
 
-```{r, eval = FALSE}
-## install devtools package, to get other packages from GitHub
-install.packages("devtools")
+We will read that sample CSV dataset into `R` to show how 
+`pscore` can be used to score it and calculate the MetSSS.
+Here we read the data in using the `read.csv()` function.
+The data are stored in `R` under the name `d`.
 
-## this is the workhorse with the functions to do the calculations
-devtools::install_github("JWiley/score-project/pscore")
-``` 
+> Note that if you wanted to use this code on your own, real data
+> instead of this example dataset, you only need to change the path to 
+> where your data are stored on your computer. For example changing to 
+> something like:
+> `d <- read.csv("C:/path/to/your/data/your_data.csv")`
 
-```{r, eval = FALSE}
+```{r}
 ## load data
-d <- read.csv("sample_metsss.csv")
+d <- read.csv(
+  system.file("extdata", "sample_metsss.csv", package = "pscore"))
+```
 
-## only if having trouble, can check the STRucture of the data, which should be similar:
+The table that follows shows what the example dataset looks like.
+It has five different values and just the variables required 
+for calculating the metabolic syndrome severity score (MetSSS).
+
+```{r, echo = FALSE, results = "asis"}
+knitr::kable(d)
+```
+
+We can also check the `str`ucture of the data to see 
+how `R` sees the dataset, using the `str()` function.
+This can be useful because even if you think the data are 
+created and formatted correctly, if `R` is not reading it in 
+correctly, you may have trouble calculating the MetSSS.
+Here is the structure for the sample data.
+Your real data should look similar.
+
+```{r}
 str(d)
+```
 
+Once we have the dataset loaded and have confirmed that the variables are named 
+correctly and that the values are correct, scoring the MetSSS using the 
+weights derived in the Wiley and Carrington (2016) paper can be done 
+using the `MetSSS()` function as below. We save the results as a new 
+object, `dscored`.
+
+```{r}
 ## use the MetSSS calculator to score the data
 dscored <- MetSSS(d)
+```
 
-## save the scored data back to another CSV file
+The object `dscored` should look exactly like the dataset you used, with one
+extra column or variable added, `metsss` which is the calculated 
+metabolic syndrome severity score.
+Here is a table showing what the scored dataset looks like for the sample data.
+
+```{r, echo = FALSE, results = "asis"}
+knitr::kable(dscored)
+```
+
+Finally, if you want to save your results or analyze the MetSSS 
+outside of `R`, you can write the dataset with the scored MetSSS variable 
+back out as a CSV file using the code that follows.
+
+```{r, eval = FALSE}
+## this will tell you where the file will be saved by R
+getwd()
+
+## save the scored data back to a CSV file
 write.csv(dscored, file = "scored_metsss.csv", row.names = FALSE)
 ```

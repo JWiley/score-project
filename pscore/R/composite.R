@@ -284,7 +284,9 @@ mahalanobisComposite <- function(object, ncomponents, pca) {
 }
 
 # clear R CMD CHECK notes
-if(getRversion() >= "2.15.1")  utils::globalVariables(c("Component", "Eigenvalue", "Variable", "value"))
+if (getRversion() >= "2.15.1") {
+  utils::globalVariables(c("Component", "Eigenvalue", "Variable", "value"))
+}
 
 #' Score Data Using a simple sum
 #'
@@ -459,6 +461,7 @@ sumComposite <- function(object, transform = c("square", "abs", "none"), type = 
 #' # summarize the composite scores
 #' summary(fcomp@@scores)
 #'
+#' \dontrun{
 #' # we can also fit a second-order factor model
 #' # there are not enough indicators to identify the factor
 #' # and so lavaan gives us warning messages
@@ -476,6 +479,7 @@ sumComposite <- function(object, transform = c("square", "abs", "none"), type = 
 #'
 #' # cleanup
 #' rm(d, dres, fcomp, fcomp2)
+#' }
 factorComposite <- function(object, type = c("onefactor", "secondorderfactor", "bifactor"), factors = list(NA_character_)) {
     stopifnot(is(object, "CompositeReady"))
     type <- match.arg(type)

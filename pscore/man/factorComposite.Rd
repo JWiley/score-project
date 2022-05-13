@@ -65,6 +65,7 @@ fcomp@scoreHistogram
 # summarize the composite scores
 summary(fcomp@scores)
 
+\dontrun{
 # we can also fit a second-order factor model
 # there are not enough indicators to identify the factor
 # and so lavaan gives us warning messages
@@ -82,6 +83,7 @@ plot(fcomp@scores, fcomp2@scores)
 
 # cleanup
 rm(d, dres, fcomp, fcomp2)
+}
 }
 \seealso{
 Other composite: 
